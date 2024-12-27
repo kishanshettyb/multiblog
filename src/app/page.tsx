@@ -1,4 +1,3 @@
-'use client'
 import { LoginForm } from '@/components/login'
 import Image from 'next/image'
 import React from 'react'
@@ -9,9 +8,10 @@ function Page() {
       <div className="w-full h-[40%] md:h-full md:w-1/2">
         <Image
           src="/images/login.jpg"
-          width="1080"
-          height="1080"
+          width="700"
+          height="300"
           alt="multiblog"
+          priority
           className="w-full h-full  md:h-screen object-cover object-top"
         />
       </div>

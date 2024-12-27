@@ -24,7 +24,7 @@ const eslintConfig = [
     },
     // Custom rules
     rules: {
-      quotes: ["error", "single"],
+      // quotes: ["error", "single"],
       semi: ["error", "always"],
       "no-unused-vars": [
         "error",
