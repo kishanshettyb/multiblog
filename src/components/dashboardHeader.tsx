@@ -18,7 +18,9 @@ function DashboardHeader() {
         </div>
       </div>
       <div>
-        <Profile />
+        <>
+          <Profile />
+        </>
       </div>
     </div>
   )
