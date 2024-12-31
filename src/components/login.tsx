@@ -16,6 +16,7 @@ import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { Eye, EyeOff, LoaderCircle } from 'lucide-react'
 import { useLoginMutation } from '@/services/mutations/login'
+import axios from 'axios'
 
 export type LoginCredentials = {
   identifier: string
@@ -42,7 +43,7 @@ export function LoginForm() {
     }
   })
   const [isLoading, setIsLoading] = useState(false)
-  const loginMutation = useLoginMutation(setError)
+  const loginMutation = useLoginMutation()
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true)
@@ -52,7 +53,12 @@ export function LoginForm() {
       password: password
     }
     loginMutation.mutate(loginData, {
-      onError: () => {
+      onError: (error) => {
+        // Check if the error is an Axios error
+        if (axios.isAxiosError(error)) {
+          // Safe to access response properties
+          setError(error.response?.data?.error?.message || error.message)
+        }
         setIsLoading(false)
       }
     })
