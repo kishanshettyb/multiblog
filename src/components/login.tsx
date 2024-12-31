@@ -54,9 +54,7 @@ export function LoginForm() {
     }
     loginMutation.mutate(loginData, {
       onError: (error) => {
-        // Check if the error is an Axios error
         if (axios.isAxiosError(error)) {
-          // Safe to access response properties
           setError(error.response?.data?.error?.message || error.message)
         }
         setIsLoading(false)
