@@ -1,3 +1,4 @@
+import { LoginCredentials } from '@/components/login'
 import { useMutation } from '@tanstack/react-query'
 import axios from 'axios'
 import { useRouter } from 'next/navigation'
@@ -9,7 +10,7 @@ export const useLoginMutation = () => {
     throw new Error('LOGIN_URL is not defined in the environment variables.')
   }
 
-  return useMutation({
+  return useMutation<void, unknown, LoginCredentials>({
     mutationFn: async (loginData) => {
       const response = await axios.post(LOGIN_URL, loginData, {
         headers: {
@@ -27,7 +28,7 @@ export const useLoginMutation = () => {
       if (axios.isAxiosError(error)) {
         console.log(error.response?.data?.error.message || error.message)
       } else {
-        console.log(error.message)
+        console.log(error)
       }
     }
   })
