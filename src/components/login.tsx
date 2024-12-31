@@ -15,14 +15,15 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { Eye, EyeOff, LoaderCircle } from 'lucide-react'
+import { useLoginMutation } from '@/services/mutations/login'
 
 export type LoginCredentials = {
-  username: string
+  identifier: string
   password: string
 }
 
 const formSchema = z.object({
-  username: z.string().min(2, {
+  identifier: z.string().min(2, {
     message: 'Please enter username'
   }),
   password: z.string().min(2, {
@@ -32,31 +33,29 @@ const formSchema = z.object({
 
 export function LoginForm() {
   const [showPassword, setShowPassword] = useState(false)
+  const [error, setError] = useState<string | null>(null)
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      username: '',
+      identifier: '',
       password: ''
     }
   })
   const [isLoading, setIsLoading] = useState(false)
+  const loginMutation = useLoginMutation(setError)
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true)
-    const { username, password } = values
+    const { identifier, password } = values
     const loginData: LoginCredentials = {
-      username: username,
+      identifier: identifier,
       password: password
     }
-    console.log(loginData)
-    // loginMutation.mutate(loginData, {
-    //   onSuccess: () => {
-    //     // setIsLoading(false);
-    //   },
-    //   onError: () => {
-    //     setIsLoading(false);
-    //   }
-    // });
+    loginMutation.mutate(loginData, {
+      onError: () => {
+        setIsLoading(false)
+      }
+    })
   }
 
   return (
@@ -72,7 +71,7 @@ export function LoginForm() {
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                 <FormField
                   control={form.control}
-                  name="username"
+                  name="identifier"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Username</FormLabel>
@@ -120,6 +119,19 @@ export function LoginForm() {
                 </Button>
               </form>
             </Form>
+            <div>
+              <p className="text-xs text-center text-red-600">
+                {isLoading ? (
+                  ''
+                ) : (
+                  <>
+                    {error == 'Invalid identifier or password'
+                      ? 'Username or Password Incorect'
+                      : error}
+                  </>
+                )}
+              </p>
+            </div>
           </div>
         </CardContent>
       </Card>
