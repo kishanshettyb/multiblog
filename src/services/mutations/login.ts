@@ -2,7 +2,7 @@ import { useMutation } from '@tanstack/react-query'
 import axios from 'axios'
 import { useRouter } from 'next/navigation'
 
-export const useLoginMutation = (setError: unknown) => {
+export const useLoginMutation = () => {
   const router = useRouter()
   const LOGIN_URL = process.env.NEXT_PUBLIC_LOGIN_URL
   if (!LOGIN_URL) {
@@ -25,11 +25,9 @@ export const useLoginMutation = (setError: unknown) => {
     },
     onError: (error) => {
       if (axios.isAxiosError(error)) {
-        // Access the error response and set the error message accordingly
-        setError(error.response?.data?.error.message || error.message)
+        console.log(error.response?.data?.error.message || error.message)
       } else {
-        console.log('Error:', error) // Handle non-Axios errors
-        setError(error.message)
+        console.log(error.message)
       }
     }
   })
