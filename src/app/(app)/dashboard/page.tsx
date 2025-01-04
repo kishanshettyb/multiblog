@@ -2,6 +2,7 @@ import { LineChartBasic } from '@/components/charts/LineChartBasic'
 import { ChartConfig } from '@/components/ui/chart'
 import React from 'react'
 import moment from 'moment'
+
 function Page() {
   const start = moment().month(0).startOf('month') // January
   const end = moment().month(5).endOf('month') // June
