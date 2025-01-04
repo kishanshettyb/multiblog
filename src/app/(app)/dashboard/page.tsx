@@ -2,6 +2,8 @@ import { LineChartBasic } from '@/components/charts/LineChartBasic'
 import { ChartConfig } from '@/components/ui/chart'
 import React from 'react'
 import moment from 'moment'
+import Header from '@/components/header'
+import { Globe } from 'lucide-react'
 
 function Page() {
   const start = moment().month(0).startOf('month') // January
@@ -29,16 +31,27 @@ function Page() {
   } satisfies ChartConfig
 
   return (
-    <div className="grid grid-cols grid-cols-3">
-      <LineChartBasic
-        chartData={chartData}
-        chartConfig={chartConfig}
-        title="Active Users Trend Over Time"
-        subTitle={formattedDateRange}
-        footerTitle="Trending up by 5.2% this month"
-        footerDesc="Active users over the past 6 months, page views over time, bounce rate trends."
+    <>
+      <Header
+        title="Dashboard"
+        desc="Track your blog's performance with insights on traffic, content, and engagement."
+        styles="mb-5"
+        buttons
+        buttonLink="/domains"
+        buttonTitle="Create Domains"
+        icon={Globe}
       />
-    </div>
+      <div className="grid grid-cols lg:grid-cols-3">
+        <LineChartBasic
+          chartData={chartData}
+          chartConfig={chartConfig}
+          title="Active Users Trend Over Time"
+          subTitle={formattedDateRange}
+          footerTitle="Trending up by 5.2% this month"
+          footerDesc="Active users over the past 6 months, page views over time, bounce rate trends."
+        />
+      </div>
+    </>
   )
 }
 
