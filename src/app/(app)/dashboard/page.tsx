@@ -1,3 +1,4 @@
+'use client'
 import { LineChartBasic } from '@/components/charts/LineChartBasic'
 import { ChartConfig } from '@/components/ui/chart'
 import React from 'react'
