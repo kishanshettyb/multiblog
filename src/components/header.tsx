@@ -1,6 +1,8 @@
-import React from 'react'
+'use client'
+import React, { useState } from 'react'
 import { Button } from './ui/button'
 import Link from 'next/link'
+import { CustomModal } from './customModal'
 
 interface Props {
   title: string
@@ -10,11 +12,30 @@ interface Props {
   buttonTitle?: string
   buttonLink?: string
   icon?: IconType
+  modalButton?: boolean
+  components?: React.ReactNode
 }
 
 type IconType = React.ComponentType<React.SVGProps<SVGSVGElement>>
 
-function Header({ title, desc, styles, buttons, buttonTitle, buttonLink, icon: Icon }: Props) {
+function Header({
+  title,
+  desc,
+  styles,
+  buttons,
+  buttonTitle,
+  buttonLink,
+  icon: Icon,
+  modalButton,
+  components
+}: Props) {
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const handleButtonClick = () => {
+    if (modalButton) {
+      setIsModalOpen(true)
+    }
+  }
+
   return (
     <div
       className={`w-full justify-between items-center flex ${buttons ? `grid-cols-2` : `grid-cols-1`} ${styles}`}
@@ -25,12 +46,28 @@ function Header({ title, desc, styles, buttons, buttonTitle, buttonLink, icon: I
       </div>
       {buttons ? (
         <div>
-          <Link href={buttonLink ? buttonLink : '#'}>
-            <Button size="lg">
-              {Icon && <Icon className="mt-[-1px]" />} {/* Render icon dynamically */}
-              {buttonTitle ? buttonTitle : 'Button'}
-            </Button>
-          </Link>
+          {modalButton ? (
+            <div>
+              <Button size="lg" onClick={handleButtonClick}>
+                {Icon && <Icon className="mt-[-1px]" />}
+                {buttonTitle ? buttonTitle : 'Button'}
+              </Button>
+              <CustomModal
+                title="Create Domains"
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+              >
+                <div>{components}</div>
+              </CustomModal>
+            </div>
+          ) : (
+            <Link href={buttonLink ? buttonLink : '#'}>
+              <Button size="lg">
+                {Icon && <Icon className="mt-[-1px]" />}
+                {buttonTitle ? buttonTitle : 'Button'}
+              </Button>
+            </Link>
+          )}
         </div>
       ) : (
         <></>
