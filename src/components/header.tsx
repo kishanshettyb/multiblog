@@ -14,6 +14,7 @@ interface Props {
   buttonLink?: string
   icon?: IconType
   modalButton?: boolean
+  modalTitle?: string
   components?: React.ReactNode
 }
 
@@ -28,6 +29,7 @@ function Header({
   buttonLink,
   icon: Icon,
   modalButton,
+  modalTitle,
   components
 }: Props) {
   const { isModalOpen, setIsModalOpen } = useModalStore()
@@ -54,7 +56,7 @@ function Header({
                 {buttonTitle ? buttonTitle : 'Button'}
               </Button>
               <CustomModal
-                title="Create Domains"
+                title={modalTitle ? modalTitle : ''}
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
               >
