@@ -1,6 +1,7 @@
 import DashboardHeader from '@/components/dashboardHeader'
 import Footer from '@/components/footer'
 import Sidebar from '@/components/sidebar'
+import { Toaster } from '@/components/ui/toaster'
 import React from 'react'
 
 export default function Layout({
@@ -11,9 +12,10 @@ export default function Layout({
   return (
     <div className="flex  h-screen overflow-hidden">
       <Sidebar />
-      <main className="flex w-full flex-col">
+      <main className="flex w-full flex-col overflow-scroll">
         <DashboardHeader />
         <div className="px-6 py-4">{children}</div>
+        <Toaster />
         <Footer />
       </main>
     </div>
