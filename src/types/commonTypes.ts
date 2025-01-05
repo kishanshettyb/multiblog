@@ -3,9 +3,11 @@ export type Login = {
   password: string
 }
 
-export type Domains = {
-  domain_name: number
+export type Domain = {
+  documentId: string
+  domain_name: string
   domain_desc: string
   publishedAt: Date
+  createdAt: Date
   data?: unknown[]
 }
