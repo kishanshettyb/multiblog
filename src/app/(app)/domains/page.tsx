@@ -1,9 +1,6 @@
 'use client'
-import { CustomDataTable } from '@/components/customDatatable'
-import Header from '@/components/header'
-import Test from '@/components/test'
-import { Button } from '@/components/ui/button'
 import React from 'react'
+import { useGetAllDomains } from '@/services/queries/domains'
 import { Checkbox } from '@/components/ui/checkbox'
 import {
   DropdownMenu,
@@ -13,137 +10,113 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
-
-import { ArrowUpDown, MoreHorizontal, Plus } from 'lucide-react'
+import { ArrowUpDown, MoreHorizontal, Pen, Plus } from 'lucide-react'
 import { ColumnDef } from '@tanstack/react-table'
+import moment from 'moment'
+import Header from '@/components/header'
+import Test from '@/components/test'
+import { CustomDataTable } from '@/components/customDatatable'
+import { Button } from '@/components/ui/button'
+import { Domain } from '@/types/commonTypes'
 
-const data: Payment[] = [
-  {
-    id: 'm5gr84i9',
-    amount: 316,
-    status: 'success',
-    email: 'ken99@yahoo.com'
-  },
-  {
-    id: '3u1reuv4',
-    amount: 242,
-    status: 'success',
-    email: 'Abe45@gmail.com'
-  },
-  {
-    id: 'derv1ws0',
-    amount: 837,
-    status: 'processing',
-    email: 'Monserrat44@gmail.com'
-  },
-  {
-    id: '5kma53ae',
-    amount: 874,
-    status: 'success',
-    email: 'Silas22@gmail.com'
-  },
-  {
-    id: 'bhqecj4p',
-    amount: 721,
-    status: 'failed',
-    email: 'carmella@hotmail.com'
-  }
-]
-
-export type Payment = {
-  id: string
-  amount: number
-  status: 'pending' | 'processing' | 'success' | 'failed'
-  email: string
-}
-
-export const columns: ColumnDef<Payment>[] = [
-  {
-    id: 'select',
-    header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && 'indeterminate')
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false
-  },
-  {
-    accessorKey: 'status',
-    header: 'Status',
-    cell: ({ row }) => <div className="capitalize">{row.getValue('status')}</div>
-  },
-  {
-    accessorKey: 'email',
-    header: ({ column }) => {
-      return (
+function Domains() {
+  const allDomainsData = useGetAllDomains()
+  const data = allDomainsData?.data?.data || []
+  const columns: ColumnDef<Domain>[] = [
+    {
+      id: 'select',
+      header: ({ table }) => (
+        <Checkbox
+          checked={
+            table.getIsAllPageRowsSelected() ||
+            (table.getIsSomePageRowsSelected() && 'indeterminate')
+          }
+          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+          aria-label="Select all"
+        />
+      ),
+      cell: ({ row }) => (
+        <Checkbox
+          checked={row.getIsSelected()}
+          onCheckedChange={(value) => row.toggleSelected(!!value)}
+          aria-label="Select row"
+        />
+      ),
+      enableSorting: false,
+      enableHiding: false
+    },
+    {
+      accessorKey: 'domain_name',
+      header: 'Domain Name',
+      cell: ({ row }) => <div className="lowercase">{row.getValue('domain_name')}</div>
+    },
+    {
+      accessorKey: 'domain_desc',
+      header: 'Description',
+      cell: ({ row }) => <div className="lowercase">{row.getValue('domain_desc')}</div>
+    },
+    {
+      accessorKey: 'createdAt',
+      header: ({ column }) => (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         >
-          Email
+          Created Date
           <ArrowUpDown />
         </Button>
+      ),
+      cell: ({ row }) => (
+        <div className="uppercase">
+          {moment(row.getValue('createdAt')).format('DD MMM YYYY ( hh:mm:ss A )')}
+        </div>
       )
     },
-    cell: ({ row }) => <div className="lowercase">{row.getValue('email')}</div>
-  },
-  {
-    accessorKey: 'amount',
-    header: () => <div className="text-right">Amount</div>,
-    cell: ({ row }) => {
-      const amount = parseFloat(row.getValue('amount'))
-
-      // Format the amount as a dollar amount
-      const formatted = new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'USD'
-      }).format(amount)
-
-      return <div className="text-right font-medium">{formatted}</div>
-    }
-  },
-  {
-    id: 'actions',
-    enableHiding: false,
-    cell: ({ row }) => {
-      const payment = row.original
-
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem onClick={() => navigator.clipboard.writeText(payment.id)}>
-              Copy payment ID
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>View customer</DropdownMenuItem>
-            <DropdownMenuItem>View payment details</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+    {
+      accessorKey: 'publishedAt',
+      header: ({ column }) => (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
+          Published Date
+          <ArrowUpDown />
+        </Button>
+      ),
+      cell: ({ row }) => (
+        <div className="uppercase">
+          {moment(row.getValue('publishedAt')).format('DD MMM YYYY ( hh:mm:ss A )')}
+        </div>
       )
+    },
+    {
+      id: 'actions',
+      enableHiding: false,
+      cell: ({ row }) => {
+        const payment = row.original
+        return (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" className="h-8 w-8 p-0">
+                <span className="sr-only">Open menu</span>
+                <MoreHorizontal />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>Actions</DropdownMenuLabel>
+              <DropdownMenuItem onClick={() => navigator.clipboard.writeText(payment.id)}>
+                <>
+                  <Pen size={10} /> Edit
+                </>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )
+      }
     }
-  }
-]
+  ]
 
-function Domains() {
   return (
     <div>
       <Header
@@ -155,7 +128,7 @@ function Domains() {
         modalButton
         components={<Test />}
       />
-      <CustomDataTable data={data} columns={columns} searchItem="status" />
+      <CustomDataTable columns={columns} data={data} searchItem="domain_name" />
     </div>
   )
 }
