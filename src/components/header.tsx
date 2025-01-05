@@ -43,7 +43,7 @@ function Header({
     >
       <div>
         <h2 className="text-2xl text-slate-900 xl:text-[1.8rem] font-bold">{title}</h2>
-        <p className="text-slate-400 text-sm">{desc}</p>
+        <p className="text-slate-600 text-sm">{desc}</p>
       </div>
       {buttons ? (
         <div>

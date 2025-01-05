@@ -18,6 +18,7 @@ export function Profile() {
         <DropdownMenuTrigger asChild>
           <Avatar>
             <AvatarImage
+              alt="Profile"
               className="w-[40px] h-[40px] rounded-full"
               src="https://github.com/shadcn.png"
             />
