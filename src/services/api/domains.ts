@@ -19,3 +19,7 @@ export const getAllDomains = async (): Promise<Domain[]> => {
     throw error
   }
 }
+
+export const createDomains = async (data: Domain) => {
+  await axiosInstance.post('domains', data)
+}
