@@ -1,10 +1,151 @@
 'use client'
 import Header from '@/components/header'
 import Test from '@/components/test'
-import { Layers2 } from 'lucide-react'
+import { useGetAllCategories } from '@/services/queries/categories'
+import { ArrowUpDown, Layers2, MoreHorizontal, Pen } from 'lucide-react'
 import React from 'react'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger
+} from '@/components/ui/dropdown-menu'
+import { ColumnDef } from '@tanstack/react-table'
+import { Categories } from '@/types/commonTypes'
+import { Button } from '@/components/ui/button'
+import moment from 'moment'
+import { CustomDataTable } from '@/components/customDatatable'
+import Link from 'next/link'
+import { Checkbox } from '@/components/ui/checkbox'
 
-function Categories() {
+function CategoriesPage() {
+  const allCategoriesData = useGetAllCategories()
+  const data = allCategoriesData?.data?.data || []
+  const columns: ColumnDef<Categories>[] = [
+    {
+      id: 'select',
+      header: ({ table }) => (
+        <Checkbox
+          checked={
+            table.getIsAllPageRowsSelected() ||
+            (table.getIsSomePageRowsSelected() && 'indeterminate')
+          }
+          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+          aria-label="Select all"
+        />
+      ),
+      cell: ({ row }) => (
+        <Checkbox
+          checked={row.getIsSelected()}
+          onCheckedChange={(value) => row.toggleSelected(!!value)}
+          aria-label="Select row"
+        />
+      ),
+      enableSorting: false,
+      enableHiding: false
+    },
+    {
+      accessorKey: 'category_name',
+      header: 'Category Name',
+      cell: ({ row }) => <div className="capitalize">{row.getValue('category_name')}</div>
+    },
+    {
+      accessorKey: 'category_desc',
+      header: 'Description',
+      cell: ({ row }) => <div className="lowercase">{row.getValue('category_desc')}</div>
+    },
+    {
+      accessorKey: 'category_slug',
+      header: 'Link',
+      cell: ({ row }) => (
+        <div className="lowercase">
+          <Link className="text-blue-600" href="#">
+            {row.getValue('category_slug')}
+          </Link>
+        </div>
+      )
+    },
+    {
+      accessorKey: 'createdAt',
+      header: ({ column }) => (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
+          Created Date
+          <ArrowUpDown />
+        </Button>
+      ),
+      cell: ({ row }) => (
+        <div className="lowecase flex gap-x-2 w-[150px] justify-center items-center border border-green-600 bg-green-50 rounded-lg p-2">
+          <div>
+            <p className="text-xs text-green-600 font-semibold">
+              {moment(row.getValue('createdAt')).format('DD MMM YY')}
+            </p>
+          </div>
+          <div>
+            <p className="text-xs text-green-600">
+              {moment(row.getValue('createdAt')).format(' hh:mm:ss A ')}
+            </p>
+          </div>
+        </div>
+      )
+    },
+    {
+      accessorKey: 'publishedAt',
+      header: ({ column }) => (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
+          Published Date
+          <ArrowUpDown />
+        </Button>
+      ),
+      cell: ({ row }) => (
+        <div className="lowecase flex gap-x-2 w-[150px] justify-center items-center border border-orange-600 bg-orange-50 rounded-lg p-2">
+          <div>
+            <p className="text-xs text-orange-600 font-semibold">
+              {moment(row.getValue('publishedAt')).format('DD MMM YY')}
+            </p>
+          </div>
+          <div>
+            <p className="text-xs text-orange-600">
+              {moment(row.getValue('publishedAt')).format(' hh:mm:ss A ')}
+            </p>
+          </div>
+        </div>
+      )
+    },
+    {
+      id: 'actions',
+      enableHiding: false,
+      cell: ({ row }) => {
+        const payment = row.original
+        return (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" className="h-8 w-8 p-0">
+                <span className="sr-only">Open menu</span>
+                <MoreHorizontal />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>Actions</DropdownMenuLabel>
+              <DropdownMenuItem onClick={() => navigator.clipboard.writeText(payment.id)}>
+                <>
+                  <Pen size={10} /> Edit
+                </>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )
+      }
+    }
+  ]
   return (
     <div>
       <Header
@@ -17,8 +158,9 @@ function Categories() {
         modalTitle="Crete Categories"
         components={<Test />}
       />
+      <CustomDataTable columns={columns} data={data} searchItem="category_name" />
     </div>
   )
 }
 
-export default Categories
+export default CategoriesPage
