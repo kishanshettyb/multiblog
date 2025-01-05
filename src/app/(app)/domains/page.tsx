@@ -12,12 +12,12 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { ArrowUpDown, MoreHorizontal, Pen, Plus } from 'lucide-react'
 import { ColumnDef } from '@tanstack/react-table'
-import moment from 'moment'
 import Header from '@/components/header'
 import { CustomDataTable } from '@/components/customDatatable'
 import { Button } from '@/components/ui/button'
 import { Domain } from '@/types/commonTypes'
 import CreateDomainsForm from '@/components/forms/createDomainsForm'
+import ShowDate from '@/components/showDate'
 
 function Domains() {
   const allDomainsData = useGetAllDomains()
@@ -67,9 +67,11 @@ function Domains() {
         </Button>
       ),
       cell: ({ row }) => (
-        <div className="uppercase">
-          {moment(row.getValue('createdAt')).format('DD MMM YYYY ( hh:mm:ss A )')}
-        </div>
+        <ShowDate
+          color="green"
+          createdDate={row.getValue('createdAt')}
+          updatedDate={row.getValue('createdAt')}
+        />
       )
     },
     {
@@ -84,9 +86,11 @@ function Domains() {
         </Button>
       ),
       cell: ({ row }) => (
-        <div className="uppercase">
-          {moment(row.getValue('publishedAt')).format('DD MMM YYYY ( hh:mm:ss A )')}
-        </div>
+        <ShowDate
+          color="orange"
+          createdDate={row.getValue('publishedAt')}
+          updatedDate={row.getValue('publishedAt')}
+        />
       )
     },
     {

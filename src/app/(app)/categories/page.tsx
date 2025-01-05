@@ -15,10 +15,10 @@ import {
 import { ColumnDef } from '@tanstack/react-table'
 import { Categories } from '@/types/commonTypes'
 import { Button } from '@/components/ui/button'
-import moment from 'moment'
 import { CustomDataTable } from '@/components/customDatatable'
 import Link from 'next/link'
 import { Checkbox } from '@/components/ui/checkbox'
+import ShowDate from '@/components/showDate'
 
 function CategoriesPage() {
   const allCategoriesData = useGetAllCategories()
@@ -79,18 +79,11 @@ function CategoriesPage() {
         </Button>
       ),
       cell: ({ row }) => (
-        <div className="lowecase flex gap-x-2 w-[150px] justify-center items-center border border-green-600 bg-green-50 rounded-lg p-2">
-          <div>
-            <p className="text-xs text-green-600 font-semibold">
-              {moment(row.getValue('createdAt')).format('DD MMM YY')}
-            </p>
-          </div>
-          <div>
-            <p className="text-xs text-green-600">
-              {moment(row.getValue('createdAt')).format(' hh:mm:ss A ')}
-            </p>
-          </div>
-        </div>
+        <ShowDate
+          color="green"
+          createdDate={row.getValue('createdAt')}
+          updatedDate={row.getValue('createdAt')}
+        />
       )
     },
     {
@@ -105,18 +98,11 @@ function CategoriesPage() {
         </Button>
       ),
       cell: ({ row }) => (
-        <div className="lowecase flex gap-x-2 w-[150px] justify-center items-center border border-orange-600 bg-orange-50 rounded-lg p-2">
-          <div>
-            <p className="text-xs text-orange-600 font-semibold">
-              {moment(row.getValue('publishedAt')).format('DD MMM YY')}
-            </p>
-          </div>
-          <div>
-            <p className="text-xs text-orange-600">
-              {moment(row.getValue('publishedAt')).format(' hh:mm:ss A ')}
-            </p>
-          </div>
-        </div>
+        <ShowDate
+          color="orange"
+          createdDate={row.getValue('publishedAt')}
+          updatedDate={row.getValue('publishedAt')}
+        />
       )
     },
     {
