@@ -1,6 +1,5 @@
 'use client'
 import Header from '@/components/header'
-import Test from '@/components/test'
 import { useGetAllCategories } from '@/services/queries/categories'
 import { ArrowUpDown, Layers2, MoreHorizontal, Pen } from 'lucide-react'
 import React from 'react'
@@ -19,6 +18,7 @@ import { CustomDataTable } from '@/components/customDatatable'
 import Link from 'next/link'
 import { Checkbox } from '@/components/ui/checkbox'
 import ShowDate from '@/components/showDate'
+import CreateCategoriesForm from '@/components/forms/createCategoriesForm'
 
 function CategoriesPage() {
   const allCategoriesData = useGetAllCategories()
@@ -142,7 +142,7 @@ function CategoriesPage() {
         buttonTitle="Create Category"
         modalButton
         modalTitle="Crete Categories"
-        components={<Test />}
+        components={<CreateCategoriesForm />}
       />
       <CustomDataTable columns={columns} data={data} searchItem="category_name" />
     </div>
