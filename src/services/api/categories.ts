@@ -1,4 +1,4 @@
-import { Categories, Domain } from '@/types/commonTypes'
+import { Categories } from '@/types/commonTypes'
 import axios from 'axios'
 
 const token = process.env.NEXT_PUBLIC_API_TOKEN
@@ -20,6 +20,6 @@ export const getAllCategories = async (): Promise<Categories[]> => {
   }
 }
 
-export const createCategories = async (data: Domain) => {
+export const createCategories = async (data: Categories[]) => {
   await axiosInstance.post('categories', data)
 }
