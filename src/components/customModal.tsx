@@ -24,9 +24,7 @@ export function CustomModal({ isOpen, onClose, title, desc, children }: Props) {
           <DialogTitle>{title}</DialogTitle>
           <DialogDescription>{desc}</DialogDescription>
         </DialogHeader>
-        <div className="grid gap-4 py-4">
-          <div className="grid grid-cols-4 items-center gap-4">{children}</div>
-        </div>
+        <div className="grid gap-4 py-4">{children}</div>
       </DialogContent>
     </Dialog>
   )
