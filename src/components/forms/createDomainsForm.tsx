@@ -15,6 +15,7 @@ import { Input } from '@/components/ui/input'
 import { z } from 'zod'
 import { useCreateDomain } from '@/services/mutations/domain'
 import { LoaderCircle } from 'lucide-react'
+import useModalStore from '@/app/store/store'
 
 const domainNameRegex = /^(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$/
 const formSchema = z.object({
@@ -30,6 +31,7 @@ const formSchema = z.object({
 
 function CreateDomainsForm() {
   const [isLoading, setIsLoading] = useState(false)
+  const { setIsModalOpen } = useModalStore()
   const createDomainsMutation = useCreateDomain()
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -55,6 +57,7 @@ function CreateDomainsForm() {
       },
       onSuccess: () => {
         setIsLoading(false)
+        setIsModalOpen(false)
       }
     })
   }

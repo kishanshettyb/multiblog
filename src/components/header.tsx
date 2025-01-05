@@ -1,8 +1,9 @@
 'use client'
-import React, { useState } from 'react'
+import React from 'react'
 import { Button } from './ui/button'
 import Link from 'next/link'
 import { CustomModal } from './customModal'
+import useModalStore from '@/app/store/store'
 
 interface Props {
   title: string
@@ -29,7 +30,7 @@ function Header({
   modalButton,
   components
 }: Props) {
-  const [isModalOpen, setIsModalOpen] = useState(false)
+  const { isModalOpen, setIsModalOpen } = useModalStore()
   const handleButtonClick = () => {
     if (modalButton) {
       setIsModalOpen(true)
