@@ -67,7 +67,7 @@ export function CustomDataTable<T>({ data, columns, searchItem }: CustomDataTabl
     <div className="w-full p-4 border rounded-xl shadow-2xl shadow-slate-50 my-5">
       <div className="flex items-center py-4">
         <Input
-          placeholder={searchItem ? `Search ${searchItem}` : 'Search'}
+          placeholder={searchItem ? `Search ${searchItem.replace(/_/g, ' ')}` : 'Search'}
           value={(table.getColumn(searchItem)?.getFilterValue() as string) ?? ''}
           onChange={(event) => table.getColumn(searchItem)?.setFilterValue(event.target.value)}
           className="max-w-sm"
