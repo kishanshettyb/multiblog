@@ -7,4 +7,5 @@ export type Domains = {
   domain_name: number
   domain_desc: string
   publishedAt: Date
+  data?: unknown[]
 }
