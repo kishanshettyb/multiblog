@@ -14,10 +14,10 @@ import { ArrowUpDown, MoreHorizontal, Pen, Plus } from 'lucide-react'
 import { ColumnDef } from '@tanstack/react-table'
 import moment from 'moment'
 import Header from '@/components/header'
-import Test from '@/components/test'
 import { CustomDataTable } from '@/components/customDatatable'
 import { Button } from '@/components/ui/button'
 import { Domain } from '@/types/commonTypes'
+import CreateDomainsForm from '@/components/forms/createDomainsForm'
 
 function Domains() {
   const allDomainsData = useGetAllDomains()
@@ -118,7 +118,7 @@ function Domains() {
   ]
 
   return (
-    <div>
+    <div className="h-full overflow-auto ">
       <Header
         title="Domains"
         desc="Create domains"
@@ -126,7 +126,7 @@ function Domains() {
         buttonTitle="Create Domains"
         icon={Plus}
         modalButton
-        components={<Test />}
+        components={<CreateDomainsForm />}
       />
       <CustomDataTable columns={columns} data={data} searchItem="domain_name" />
     </div>
