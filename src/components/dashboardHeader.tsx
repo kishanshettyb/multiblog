@@ -10,8 +10,8 @@ function DashboardHeader() {
       <div>
         <div>
           <div className="flex opacity-60 w-full max-w-sm items-center space-x-2">
-            <Input type="text" placeholder="search post" />
-            <Button type="submit" variant="ghost" className="border">
+            <Input id="search" type="text" placeholder="search post" />
+            <Button aria-labelledby="search" type="submit" variant="ghost" className="border">
               <Search />
             </Button>
           </div>

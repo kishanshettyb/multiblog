@@ -11,3 +11,14 @@ export type Domain = {
   createdAt: Date
   data?: unknown[]
 }
+
+export type Categories = {
+  documentId: string
+  category_name: string
+  category_desc: string
+  category_slug: string
+  createdAt: Date
+  updatedAt: Date
+  data?: unknown[]
+  domains?: []
+}

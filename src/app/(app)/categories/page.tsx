@@ -1,7 +1,8 @@
 'use client'
+import Header from '@/components/header'
+import { useGetAllCategories } from '@/services/queries/categories'
+import { ArrowUpDown, Layers2, MoreHorizontal, Pen } from 'lucide-react'
 import React from 'react'
-import { useGetAllDomains } from '@/services/queries/domains'
-import { Checkbox } from '@/components/ui/checkbox'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,19 +11,19 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
-import { ArrowUpDown, MoreHorizontal, Pen, Plus } from 'lucide-react'
 import { ColumnDef } from '@tanstack/react-table'
-import Header from '@/components/header'
-import { CustomDataTable } from '@/components/customDatatable'
+import { Categories } from '@/types/commonTypes'
 import { Button } from '@/components/ui/button'
-import { Domain } from '@/types/commonTypes'
-import CreateDomainsForm from '@/components/forms/createDomainsForm'
+import { CustomDataTable } from '@/components/customDatatable'
+import Link from 'next/link'
+import { Checkbox } from '@/components/ui/checkbox'
 import ShowDate from '@/components/showDate'
+import CreateCategoriesForm from '@/components/forms/createCategoriesForm'
 
-function Domains() {
-  const allDomainsData = useGetAllDomains()
-  const data = allDomainsData?.data?.data || []
-  const columns: ColumnDef<Domain>[] = [
+function CategoriesPage() {
+  const allCategoriesData = useGetAllCategories()
+  const data = allCategoriesData?.data?.data || []
+  const columns: ColumnDef<Categories>[] = [
     {
       id: 'select',
       header: ({ table }) => (
@@ -46,14 +47,25 @@ function Domains() {
       enableHiding: false
     },
     {
-      accessorKey: 'domain_name',
-      header: 'Domain Name',
-      cell: ({ row }) => <div className="lowercase">{row.getValue('domain_name')}</div>
+      accessorKey: 'category_name',
+      header: 'Category Name',
+      cell: ({ row }) => <div className="capitalize">{row.getValue('category_name')}</div>
     },
     {
-      accessorKey: 'domain_desc',
+      accessorKey: 'category_desc',
       header: 'Description',
-      cell: ({ row }) => <div className="lowercase">{row.getValue('domain_desc')}</div>
+      cell: ({ row }) => <div className="lowercase">{row.getValue('category_desc')}</div>
+    },
+    {
+      accessorKey: 'category_slug',
+      header: 'Link',
+      cell: ({ row }) => (
+        <div className="lowercase">
+          <Link className="text-blue-600" href="#">
+            {row.getValue('category_slug')}
+          </Link>
+        </div>
+      )
     },
     {
       accessorKey: 'createdAt',
@@ -120,22 +132,21 @@ function Domains() {
       }
     }
   ]
-
   return (
-    <div className="h-full overflow-auto ">
+    <div>
       <Header
-        title="Domains"
-        desc="Create domains"
+        title="Categories"
+        desc=""
+        icon={Layers2}
         buttons
-        buttonTitle="Create Domains"
-        icon={Plus}
+        buttonTitle="Create Category"
         modalButton
-        modalTitle="Create Domains"
-        components={<CreateDomainsForm />}
+        modalTitle="Crete Categories"
+        components={<CreateCategoriesForm />}
       />
-      <CustomDataTable columns={columns} data={data} searchItem="domain_name" />
+      <CustomDataTable columns={columns} data={data} searchItem="category_name" />
     </div>
   )
 }
 
-export default Domains
+export default CategoriesPage
