@@ -1,5 +1,3 @@
-'use client'
-import { zodResolver } from '@hookform/resolvers/zod'
 import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { Button } from '@/components/ui/button'
@@ -12,10 +10,11 @@ import {
   FormMessage
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { z } from 'zod'
+import { MultiSelect } from '../multi-select'
 import { LoaderCircle } from 'lucide-react'
-import useModalStore from '@/app/store/store'
+import { z } from 'zod'
 import { useCreateCategories } from '@/services/mutations/categories'
+import { useGetAllDomains } from '@/services/queries/domains'
 
 const formSchema = z.object({
   category_name: z.string().min(3, { message: 'Category name must be at least 3 characters long' }),
@@ -24,6 +23,9 @@ const formSchema = z.object({
 })
 
 function CreateCategoriesForm() {
+  const [selectedDomains, setSelectedDomains] = useState([]) // Ensure state can hold full domain objects
+  const allDomainsData = useGetAllDomains()
+  const domainsData = allDomainsData?.data?.data || []
   const [isLoading, setIsLoading] = useState(false)
   const { setIsModalOpen } = useModalStore()
   const createCategoriesMutation = useCreateCategories()
@@ -39,13 +41,20 @@ function CreateCategoriesForm() {
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true)
+
+    // Log the selected domains (this should now be the full objects with domain_id and domain_name)
+    console.log('Selected Domains:', selectedDomains)
+
+    // Prepare the categories data, use the selected domain_ids
     const categoriesData = {
       data: {
         category_name: values.category_name,
         category_desc: values.category_desc,
-        category_slug: values.category_slug
+        category_slug: values.category_slug,
+        domains: selectedDomains.map((domain) => domain.document_id).join(',') // Create a comma-separated string of document_ids
       }
     }
+    console.log('===Payload:', JSON.stringify(categoriesData))
 
     createCategoriesMutation.mutate(categoriesData, {
       onError: () => {
@@ -62,6 +71,7 @@ function CreateCategoriesForm() {
     <div className="w-full">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          {/* Category Name */}
           <FormField
             control={form.control}
             name="category_name"
@@ -75,6 +85,8 @@ function CreateCategoriesForm() {
               </FormItem>
             )}
           />
+
+          {/* Category Description */}
           <FormField
             control={form.control}
             name="category_desc"
@@ -88,12 +100,14 @@ function CreateCategoriesForm() {
               </FormItem>
             )}
           />
+
+          {/* Category Slug */}
           <FormField
             control={form.control}
             name="category_slug"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Category Desc</FormLabel>
+                <FormLabel>Category Slug(URL)</FormLabel>
                 <FormControl>
                   <Input placeholder="Enter category slug" {...field} />
                 </FormControl>
@@ -101,6 +115,47 @@ function CreateCategoriesForm() {
               </FormItem>
             )}
           />
+
+          {/* Domains Selection */}
+          <FormField
+            control={form.control}
+            name="domains"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>
+                  Domains
+                  <span className="text-red-600">*</span>
+                </FormLabel>
+                <FormControl>
+                  {domainsData.length > 0 ? (
+                    <MultiSelect
+                      options={domainsData.map((item) => ({
+                        value: item.id, // Use domain id for selection
+                        label: item.domain_name
+                      }))}
+                      onValueChange={(selected) => {
+                        const selectedDomainsData = domainsData.filter(
+                          (domain) => selected.includes(domain.document_id.toString()) // Match by the selected id
+                        )
+                        setSelectedDomains(selectedDomainsData) // Store the selected domain objects
+                        field.onChange(selected) // Pass selected domain ids to form state
+                      }}
+                      value={field.value || []} // Ensure the value is set correctly from form state
+                      placeholder="Select Domains"
+                      variant="inverted"
+                      animation={2}
+                      maxCount={3}
+                    />
+                  ) : (
+                    <p>No domains found</p>
+                  )}
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          {/* Submit Button */}
           <div className="flex justify-end">
             <Button className="w-full" size="lg" disabled={isLoading} type="submit">
               {isLoading ? (
