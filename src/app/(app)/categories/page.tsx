@@ -1,137 +1,17 @@
 'use client'
+import React from 'react'
 import Header from '@/components/header'
 import { useGetAllCategories } from '@/services/queries/categories'
-import { ArrowUpDown, Layers2, MoreHorizontal, Pen } from 'lucide-react'
-import React from 'react'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu'
-import { ColumnDef } from '@tanstack/react-table'
-import { Categories } from '@/types/commonTypes'
-import { Button } from '@/components/ui/button'
+import { Layers2 } from 'lucide-react'
 import { CustomDataTable } from '@/components/customDatatable'
-import Link from 'next/link'
-import { Checkbox } from '@/components/ui/checkbox'
-import ShowDate from '@/components/showDate'
 import CreateCategoriesForm from '@/components/forms/createCategoriesForm'
+import { getCategoryColumns } from '@/config/categoriesColumns'
 
 function CategoriesPage() {
   const allCategoriesData = useGetAllCategories()
   const data = allCategoriesData?.data?.data || []
-  const columns: ColumnDef<Categories>[] = [
-    {
-      id: 'select',
-      header: ({ table }) => (
-        <Checkbox
-          checked={
-            table.getIsAllPageRowsSelected() ||
-            (table.getIsSomePageRowsSelected() && 'indeterminate')
-          }
-          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-          aria-label="Select all"
-        />
-      ),
-      cell: ({ row }) => (
-        <Checkbox
-          checked={row.getIsSelected()}
-          onCheckedChange={(value) => row.toggleSelected(!!value)}
-          aria-label="Select row"
-        />
-      ),
-      enableSorting: false,
-      enableHiding: false
-    },
-    {
-      accessorKey: 'category_name',
-      header: 'Category Name',
-      cell: ({ row }) => <div className="capitalize">{row.getValue('category_name')}</div>
-    },
-    {
-      accessorKey: 'category_desc',
-      header: 'Description',
-      cell: ({ row }) => <div className="lowercase">{row.getValue('category_desc')}</div>
-    },
-    {
-      accessorKey: 'category_slug',
-      header: 'Link',
-      cell: ({ row }) => (
-        <div className="lowercase">
-          <Link className="text-blue-600" href="#">
-            {row.getValue('category_slug')}
-          </Link>
-        </div>
-      )
-    },
-    {
-      accessorKey: 'createdAt',
-      header: ({ column }) => (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-        >
-          Created Date
-          <ArrowUpDown />
-        </Button>
-      ),
-      cell: ({ row }) => (
-        <ShowDate
-          color="green"
-          createdDate={row.getValue('createdAt')}
-          updatedDate={row.getValue('createdAt')}
-        />
-      )
-    },
-    {
-      accessorKey: 'publishedAt',
-      header: ({ column }) => (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-        >
-          Published Date
-          <ArrowUpDown />
-        </Button>
-      ),
-      cell: ({ row }) => (
-        <ShowDate
-          color="orange"
-          createdDate={row.getValue('publishedAt')}
-          updatedDate={row.getValue('publishedAt')}
-        />
-      )
-    },
-    {
-      id: 'actions',
-      enableHiding: false,
-      cell: ({ row }) => {
-        const payment = row.original
-        return (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="h-8 w-8 p-0">
-                <span className="sr-only">Open menu</span>
-                <MoreHorizontal />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuItem onClick={() => navigator.clipboard.writeText(payment.id)}>
-                <>
-                  <Pen size={10} /> Edit
-                </>
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-            </DropdownMenuContent>
-          </DropdownMenu>
-        )
-      }
-    }
-  ]
+  const columns = getCategoryColumns()
+
   return (
     <div>
       <Header
