@@ -20,4 +20,5 @@ export type Categories = {
   createdAt: Date
   updatedAt: Date
   data?: unknown[]
+  domains?: []
 }
