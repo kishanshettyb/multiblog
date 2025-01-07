@@ -1,5 +1,6 @@
 import { useGetAllDomains } from '@/services/queries/domains'
 import { Domain } from '@/types/commonTypes'
+
 export const useDomains = () => {
   const allDomainsData = useGetAllDomains()
   const data: Domain[] = allDomainsData?.data?.data || []

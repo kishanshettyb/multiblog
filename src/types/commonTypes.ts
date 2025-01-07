@@ -39,6 +39,6 @@ export type Tags = {
   tag_name?: string
   tag_slug?: string
   category?: []
-  createdAt?: Date
-  updatedAt?: Date
+  createdAt?: Date | undefined
+  updatedAt?: Date | undefined
 }
