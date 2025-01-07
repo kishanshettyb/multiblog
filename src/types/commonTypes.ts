@@ -9,6 +9,8 @@ export type Domain = {
   domain_desc: string
   publishedAt: Date
   createdAt: Date
+  value?: string
+  label?: string
   data?: unknown[]
 }
 
@@ -19,6 +21,7 @@ export type Categories = {
   category_slug: string
   createdAt: Date
   updatedAt: Date
-  data?: unknown[]
+  data?: []
   domains?: []
+  categoriesData?: []
 }
