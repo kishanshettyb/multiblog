@@ -21,6 +21,7 @@ export type Categories = {
   category_slug: string
   createdAt: Date
   updatedAt: Date
-  data?: unknown[]
+  data?: []
   domains?: []
+  categoriesData?: []
 }
