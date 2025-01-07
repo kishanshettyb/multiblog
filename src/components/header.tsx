@@ -13,6 +13,7 @@ interface Props {
   buttonTitle?: string
   buttonLink?: string
   icon?: IconType
+  modalSize?: string
   modalButton?: boolean
   modalTitle?: string
   components?: React.ReactNode
@@ -29,6 +30,7 @@ function Header({
   buttonLink,
   icon: Icon,
   modalButton,
+  modalSize,
   modalTitle,
   components
 }: Props) {
@@ -56,6 +58,7 @@ function Header({
                 {buttonTitle ? buttonTitle : 'Button'}
               </Button>
               <CustomModal
+                modalSize={modalSize}
                 title={modalTitle ? modalTitle : ''}
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
