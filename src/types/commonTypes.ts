@@ -21,7 +21,7 @@ export type Categories = {
   category_slug?: string | undefined
   createdAt?: Date | undefined
   updatedAt?: Date | undefined
-  domains?: unknown[]
+  domains?: unknown[] | undefined
 }
 
 export type CategoriesData = {
@@ -32,5 +32,5 @@ export type CategoriesData = {
   category_slug?: string
   createdAt?: Date
   updatedAt?: Date
-  domains?: unknown[]
+  domains?: unknown[] | undefined
 }

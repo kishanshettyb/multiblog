@@ -120,33 +120,27 @@ function CreateCategoriesForm() {
           />
 
           {/* Domains Selection */}
-          <FormField
-            control={form.control}
-            name="domains"
-            render={() => (
-              <FormItem>
-                <FormLabel>
-                  Domains
-                  <span className="text-red-600">*</span>
-                </FormLabel>
-                <FormControl>
-                  {domains.length > 0 ? (
-                    <MultiSelect
-                      options={domains}
-                      onValueChange={setSelectedDomains}
-                      defaultValue={selectedDomains}
-                      placeholder="Select Domains"
-                      variant="inverted"
-                      maxCount={3}
-                    />
-                  ) : (
-                    <p>No domains found</p>
-                  )}
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+
+          <FormItem>
+            <FormLabel>
+              Domains
+              <span className="text-red-600">*</span>
+            </FormLabel>
+            <FormControl>
+              {domains.length > 0 ? (
+                <MultiSelect
+                  options={domains}
+                  onValueChange={setSelectedDomains}
+                  defaultValue={selectedDomains}
+                  placeholder="Select Domains"
+                  variant="inverted"
+                  maxCount={3}
+                />
+              ) : (
+                <p>No domains found</p>
+              )}
+            </FormControl>
+          </FormItem>
 
           {/* Submit Button */}
           <div className="flex justify-end">
