@@ -68,9 +68,8 @@ function Sidebar() {
               </div>
             </Link>
           </li>
-
           <li>
-            <Link href="/dashboard">
+            <Link href="/tags">
               <div className="flex justify-start gap-x-2 items-center border border-slate-100 opacity-80 p-2 mb-2 rounded-md bg-slate-50 hover:bg-blue-50 hover:opacity-100">
                 <div>
                   <Tags size={20} />
