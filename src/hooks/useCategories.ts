@@ -1,4 +1,3 @@
-// src/hooks/useCategories.ts
 import { useGetAllCategories } from '@/services/queries/categories'
 import { Categories } from '@/types/commonTypes'
 
