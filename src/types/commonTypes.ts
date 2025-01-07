@@ -34,3 +34,11 @@ export type CategoriesData = {
   updatedAt?: Date
   domains?: unknown[] | undefined
 }
+
+export type Tags = {
+  tag_name?: string
+  tag_slug?: string
+  category?: []
+  createdAt?: Date
+  updatedAt?: Date
+}
