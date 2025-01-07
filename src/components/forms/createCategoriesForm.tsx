@@ -17,6 +17,7 @@ import { useCreateCategories } from '@/services/mutations/categories'
 import useModalStore from '@/app/store/store'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useDomains } from '@/hooks/useDomains'
+import { CategoriesData } from '@/types/commonTypes'
 
 const formSchema = z.object({
   category_name: z.string().min(3, { message: 'Category name must be at least 3 characters long' }),
@@ -50,7 +51,7 @@ function CreateCategoriesForm() {
   function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true)
 
-    const categoriesData = {
+    const categoriesData: CategoriesData = {
       data: {
         category_name: values.category_name,
         category_desc: values.category_desc,
@@ -58,7 +59,6 @@ function CreateCategoriesForm() {
         domains: selectedDomains // Create a comma-separated string of document_ids
       }
     }
-
     createCategoriesMutation.mutate(categoriesData, {
       onError: () => {
         setIsLoading(false)
@@ -120,33 +120,27 @@ function CreateCategoriesForm() {
           />
 
           {/* Domains Selection */}
-          <FormField
-            control={form.control}
-            name="domains"
-            render={() => (
-              <FormItem>
-                <FormLabel>
-                  Domains
-                  <span className="text-red-600">*</span>
-                </FormLabel>
-                <FormControl>
-                  {domains.length > 0 ? (
-                    <MultiSelect
-                      options={domains}
-                      onValueChange={setSelectedDomains}
-                      defaultValue={selectedDomains}
-                      placeholder="Select Domains"
-                      variant="inverted"
-                      maxCount={3}
-                    />
-                  ) : (
-                    <p>No domains found</p>
-                  )}
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+
+          <FormItem>
+            <FormLabel>
+              Domains
+              <span className="text-red-600">*</span>
+            </FormLabel>
+            <FormControl>
+              {domains.length > 0 ? (
+                <MultiSelect
+                  options={domains}
+                  onValueChange={setSelectedDomains}
+                  defaultValue={selectedDomains}
+                  placeholder="Select Domains"
+                  variant="inverted"
+                  maxCount={3}
+                />
+              ) : (
+                <p>No domains found</p>
+              )}
+            </FormControl>
+          </FormItem>
 
           {/* Submit Button */}
           <div className="flex justify-end">

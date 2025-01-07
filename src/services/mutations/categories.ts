@@ -9,7 +9,7 @@ export function useCreateCategories() {
   const { toast } = useToast()
 
   return useMutation({
-    mutationFn: (data: Categories[]) => createCategories(data),
+    mutationFn: (data: Categories) => createCategories(data),
     onMutate: () => {
       console.log('mutate')
     },
