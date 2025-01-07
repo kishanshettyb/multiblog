@@ -16,6 +16,7 @@ import { z } from 'zod'
 import { useCreateDomain } from '@/services/mutations/domain'
 import { LoaderCircle } from 'lucide-react'
 import useModalStore from '@/app/store/store'
+import { Textarea } from '../ui/textarea'
 
 const domainNameRegex = /^(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$/
 const formSchema = z.object({
@@ -26,7 +27,11 @@ const formSchema = z.object({
     .regex(domainNameRegex, {
       message: 'Domain name must be a valid domain (e.g., example.com)'
     }),
-  domain_desc: z.string().min(3, { message: 'Description must be at least 3 characters long' })
+  domain_desc: z.string().min(3, { message: 'Description must be at least 3 characters long' }),
+  meta_description: z
+    .string()
+    .min(3, { message: 'Meta Description must be at least 3 characters long' }),
+  meta_keywords: z.string().min(3, { message: 'Meta Keywords must be at least 3 characters long' })
 })
 
 function CreateDomainsForm() {
@@ -38,7 +43,9 @@ function CreateDomainsForm() {
 
     defaultValues: {
       domain_name: '',
-      domain_desc: ''
+      domain_desc: '',
+      meta_description: '',
+      meta_keywords: ''
     }
   })
 
@@ -47,7 +54,9 @@ function CreateDomainsForm() {
     const domainsData = {
       data: {
         domain_name: values.domain_name,
-        domain_desc: values.domain_desc
+        domain_desc: values.domain_desc,
+        meta_description: values.meta_description,
+        meta_keywords: values.meta_keywords
       }
     }
 
@@ -84,9 +93,48 @@ function CreateDomainsForm() {
             name="domain_desc"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Domain Desc</FormLabel>
+                <FormLabel>Domain Description</FormLabel>
                 <FormControl>
                   <Input placeholder="Enter domain desc" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="meta_description"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Meta Description</FormLabel>
+                <FormControl>
+                  <Textarea
+                    placeholder="Domain meta description"
+                    className="resize-none"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="meta_keywords"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Meta Keywords</FormLabel>
+                <FormControl>
+                  <Textarea
+                    placeholder="Domain Keywords"
+                    className="resize-none"
+                    {...field}
+                    onChange={(e) => {
+                      // Replace spaces with commas and update the field value
+                      const updatedValue = e.target.value.replace(/\s+/g, ',')
+                      field.onChange(updatedValue) // Manually trigger the field's onChange handler with the modified value
+                    }}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>

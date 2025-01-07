@@ -13,13 +13,14 @@ interface Props {
   title: string
   desc?: string
   size?: string
+  modalSize?: string
   children: React.ReactNode
 }
 
-export function CustomModal({ isOpen, onClose, title, desc, children }: Props) {
+export function CustomModal({ isOpen, onClose, title, desc, children, modalSize }: Props) {
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className={`sm:max-w-[425px] ${modalSize}`}>
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
           <DialogDescription>{desc}</DialogDescription>

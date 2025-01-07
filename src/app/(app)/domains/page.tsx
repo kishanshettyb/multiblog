@@ -18,8 +18,9 @@ function Domains() {
         buttons
         buttonTitle="Create Domains"
         icon={Plus}
+        modalSize="md:max-w-[400px]"
         modalButton
-        modalTitle="Create Domains"
+        modalTitle="Create Domain"
         components={<CreateDomainsForm />}
       />
       <CustomDataTable columns={columns} data={data} searchItem="domain_name" />
