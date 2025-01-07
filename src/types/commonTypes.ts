@@ -9,6 +9,8 @@ export type Domain = {
   domain_desc: string
   publishedAt: Date
   createdAt: Date
+  value?: string
+  label?: string
   data?: unknown[]
 }
 
