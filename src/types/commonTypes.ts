@@ -15,10 +15,21 @@ export type Domain = {
 }
 
 export type Categories = {
+  document_id?: string | undefined
+  category_name?: string | undefined
+  category_desc?: string | undefined
+  category_slug?: string | undefined
+  createdAt?: Date | undefined
+  updatedAt?: Date | undefined
+  domains?: unknown[]
+}
+
+export type CategoriesData = {
+  data?: object
   document_id?: string
-  category_name: string
-  category_desc: string
-  category_slug: string
+  category_name?: string
+  category_desc?: string
+  category_slug?: string
   createdAt?: Date
   updatedAt?: Date
   domains?: unknown[]
