@@ -10,9 +10,9 @@ const axiosInstance = axios.create({
   }
 })
 
-export const getAllCategories = async (): Promise<Categories[]> => {
+export const getAllCategories = async (): Promise<Categories> => {
   try {
-    const response = await axiosInstance.get<Categories[]>(`/categories`)
+    const response = await axiosInstance.get<Categories>(`/categories`)
     return response.data
   } catch (error) {
     console.log('Error fetching domains:', error)
@@ -20,6 +20,6 @@ export const getAllCategories = async (): Promise<Categories[]> => {
   }
 }
 
-export const createCategories = async (data: Categories[]) => {
+export const createCategories = async (data: Categories) => {
   await axiosInstance.post('categories', data)
 }

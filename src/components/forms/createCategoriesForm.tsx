@@ -51,12 +51,10 @@ function CreateCategoriesForm() {
     setIsLoading(true)
 
     const categoriesData = {
-      data: {
-        category_name: values.category_name,
-        category_desc: values.category_desc,
-        category_slug: values.category_slug,
-        domains: selectedDomains // Create a comma-separated string of document_ids
-      }
+      category_name: values.category_name,
+      category_desc: values.category_desc,
+      category_slug: values.category_slug,
+      domains: selectedDomains // Create a comma-separated string of document_ids
     }
 
     createCategoriesMutation.mutate(categoriesData, {
