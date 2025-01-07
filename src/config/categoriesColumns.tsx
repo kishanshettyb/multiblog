@@ -98,19 +98,19 @@ export const getCategoryColumns = (): ColumnDef<Categories>[] => [
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="h-8 w-8 p-0">
+            <Button variant="outline" className="h-8 w-8 p-4">
               <span className="sr-only">Open menu</span>
               <MoreHorizontal />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
+            <DropdownMenuSeparator />
             <DropdownMenuItem onClick={() => navigator.clipboard.writeText(payment.id)}>
               <>
                 <Pen size={10} /> Edit
               </>
             </DropdownMenuItem>
-            <DropdownMenuSeparator />
           </DropdownMenuContent>
         </DropdownMenu>
       )
