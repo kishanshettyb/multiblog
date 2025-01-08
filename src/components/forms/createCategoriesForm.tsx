@@ -18,6 +18,7 @@ import useModalStore from '@/app/store/store'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useDomains } from '@/hooks/useDomains'
 import { CategoriesData } from '@/types/commonTypes'
+import { useTags } from '@/hooks/useTags'
 
 const formSchema = z.object({
   category_name: z.string().min(3, { message: 'Category name must be at least 3 characters long' }),
@@ -27,15 +28,24 @@ const formSchema = z.object({
 
 function CreateCategoriesForm() {
   const [selectedDomains, setSelectedDomains] = useState([]) // Ensure state can hold full domain objects
+  const [selectedTags, setSelectedTags] = useState([]) // Ensure state can hold full domain objects
   const { setIsModalOpen } = useModalStore()
   const [isLoading, setIsLoading] = useState(false)
   const { data } = useDomains()
+  const dataTags = useTags()
   const createCategoriesMutation = useCreateCategories()
 
   const domains = data
   domains.forEach((item) => {
     item.value = item.documentId
     item.label = item.domain_name
+  })
+
+  const tags = dataTags?.data
+  console.log(JSON.stringify(tags))
+  tags.forEach((item) => {
+    item.value = item.documentId
+    item.label = item.tag_name
   })
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -56,7 +66,8 @@ function CreateCategoriesForm() {
         category_name: values.category_name,
         category_desc: values.category_desc,
         category_slug: values.category_slug,
-        domains: selectedDomains // Create a comma-separated string of document_ids
+        domains: selectedDomains, // Create a comma-separated string of document_ids
+        tags: selectedTags // Create a comma-separated string of document_ids
       }
     }
     createCategoriesMutation.mutate(categoriesData, {
@@ -133,6 +144,26 @@ function CreateCategoriesForm() {
                   onValueChange={setSelectedDomains}
                   defaultValue={selectedDomains}
                   placeholder="Select Domains"
+                  variant="inverted"
+                  maxCount={3}
+                />
+              ) : (
+                <p>No domains found</p>
+              )}
+            </FormControl>
+          </FormItem>
+          <FormItem>
+            <FormLabel>
+              Tags
+              <span className="text-red-600">*</span>
+            </FormLabel>
+            <FormControl>
+              {domains.length > 0 ? (
+                <MultiSelect
+                  options={tags}
+                  onValueChange={setSelectedTags}
+                  defaultValue={selectedTags}
+                  placeholder="Select Tags"
                   variant="inverted"
                   maxCount={3}
                 />

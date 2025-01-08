@@ -41,4 +41,7 @@ export type Tags = {
   category?: []
   createdAt?: Date | undefined
   updatedAt?: Date | undefined
+  value?: string
+  label?: string
+  documentId?: string
 }
