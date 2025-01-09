@@ -37,3 +37,12 @@ export type Tags = {
   label?: string | undefined
   documentId?: string
 }
+
+export type Posts = {
+  post_title: string
+  post_slug: string
+  post_content: string
+  domains?: never[]
+  categories?: never[]
+  tags?: never[]
+}
