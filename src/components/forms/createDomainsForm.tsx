@@ -15,7 +15,7 @@ import { Input } from '@/components/ui/input'
 import { z } from 'zod'
 import { useCreateDomain } from '@/services/mutations/domain'
 import { LoaderCircle } from 'lucide-react'
-import useModalStore from '@/app/store/store'
+import useModalStore from '../../store/store'
 import { Textarea } from '../ui/textarea'
 
 const domainNameRegex = /^(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$/

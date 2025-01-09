@@ -14,7 +14,7 @@ import {
 import { Input } from '@/components/ui/input'
 import { z } from 'zod'
 import { LoaderCircle } from 'lucide-react'
-import useModalStore from '@/app/store/store'
+import useModalStore from '../../store/store'
 import { useCreateTags } from '@/services/mutations/tags'
 
 const formSchema = z.object({
