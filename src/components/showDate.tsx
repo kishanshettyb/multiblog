@@ -10,15 +10,27 @@ interface Props {
 function ShowDate({ createdDate, updatedDate, color }: Props) {
   return (
     <div
-      className={`lowecase flex gap-x-2 w-[150px] justify-center items-center border border-${color}-600 bg-${color}-50 rounded-lg p-2`}
+      className={
+        color == 'green'
+          ? `border-green-600 bg-green-50 lowecase flex gap-x-2 w-[150px] justify-center items-center border  rounded-lg p-2`
+          : `border-orange-600 bg-orange-50 lowecase flex gap-x-2 w-[150px] justify-center items-center border  rounded-lg p-2`
+      }
     >
       <div>
-        <p className={`text-xs text-${color}-600 font-semibold`}>
+        <p
+          className={
+            color == 'green'
+              ? `text-green-600 text-xs  font-semibold`
+              : `text-orange-600 text-xs  font-semibold`
+          }
+        >
           {moment(createdDate).format('DD MMM YY')}
         </p>
       </div>
       <div>
-        <p className={`text-xs text-${color}-600`}>{moment(updatedDate).format(' hh:mm:ss A ')}</p>
+        <p className={color == 'green' ? `text-green-600 text-xs` : `text-orange-600 text-xs`}>
+          {moment(updatedDate).format(' hh:mm:ss A ')}
+        </p>
       </div>
     </div>
   )
