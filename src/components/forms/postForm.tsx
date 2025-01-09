@@ -18,6 +18,7 @@ import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { LoaderCircle } from 'lucide-react'
 import EditorForm from '@/components/editor'
+import { useCreatePost } from '@/services/mutations/post'
 
 interface PostProps {
   data: {
@@ -26,7 +27,7 @@ interface PostProps {
     post_slug: string
     post_content: string
     domains: string[] // Updated type
-    categories: string[] // Updated type
+    category: string[] // Updated type
     tags: string[] // Updated type
   }
 }
@@ -41,6 +42,8 @@ const PostForm = () => {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]) // Changed to hold document IDs
   const [selectedTags, setSelectedTags] = useState<string[]>([]) // Changed to hold document IDs
   const [postStatus] = useState<'draft' | 'published'>('draft') // Fixed type
+
+  const createPostMutation = useCreatePost()
 
   // content editor
   const [content, setContent] = useState('')
@@ -101,22 +104,20 @@ const PostForm = () => {
         post_slug: values.post_slug,
         post_status: postStatus,
         domains: selectedDomains,
-        categories: selectedCategories,
+        category: selectedCategories,
         tags: selectedTags
       }
     }
     console.log(JSON.stringify(postData))
 
-    // You can call your mutation function here like:
-    // createPostMutation.mutate(postData, {
-    //   onError: () => {
-    //     setIsLoading(false)
-    //   },
-    //   onSuccess: () => {
-    //     setIsLoading(false)
-    //     setIsModalOpen(false)
-    //   }
-    // })
+    createPostMutation.mutate(postData, {
+      onError: () => {
+        setIsLoading(false)
+      },
+      onSuccess: () => {
+        setIsLoading(false)
+      }
+    })
   }
 
   return (
