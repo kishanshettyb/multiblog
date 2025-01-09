@@ -20,7 +20,7 @@ export type Categories = {
   category_name?: string | undefined
   category_desc?: string | undefined
   category_slug?: string | undefined
-  createdAt: Date
+  createdAt?: Date
   updatedAt?: Date
   value?: string | undefined
   label?: string | undefined

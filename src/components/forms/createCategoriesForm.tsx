@@ -17,8 +17,19 @@ import { useCreateCategories } from '@/services/mutations/categories'
 import useModalStore from '@/app/store/store'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useDomains } from '@/hooks/useDomains'
-import { CategoriesData } from '@/types/commonTypes'
 import { useTags } from '@/hooks/useTags'
+
+interface CategoriesData {
+  data?: {
+    document_id?: string
+    category_name?: string
+    category_desc?: string
+    category_slug?: string
+    // createdAt?: Date
+    domains?: never[]
+    tags?: never[]
+  }
+}
 
 const formSchema = z.object({
   category_name: z.string().min(3, { message: 'Category name must be at least 3 characters long' }),
