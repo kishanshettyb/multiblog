@@ -45,4 +45,5 @@ export type Posts = {
   domains?: never[]
   categories?: never[]
   tags?: never[]
+  createdAt: Date
 }

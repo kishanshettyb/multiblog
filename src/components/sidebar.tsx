@@ -2,18 +2,22 @@ import {
   BellRing,
   Blocks,
   ChartLine,
+  ChevronDown,
   Globe2,
   Images,
   Layers,
   LayoutDashboard,
   MessageCircle,
+  Pencil,
   Plus,
   Settings,
   Tags,
-  Users
+  Users,
+  View
 } from 'lucide-react'
 import Link from 'next/link'
 import React from 'react'
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
 
 function Sidebar() {
   return (
@@ -59,14 +63,41 @@ function Sidebar() {
             </Link>
           </li>
           <li>
-            <Link href="/post">
-              <div className="flex justify-start gap-x-2 items-center border border-slate-100 opacity-80 p-2 mb-2 rounded-md bg-slate-50 hover:bg-blue-50 hover:opacity-100">
-                <div>
-                  <Plus size={20} />
+            <Collapsible>
+              <CollapsibleTrigger className="w-full">
+                <div className="flex justify-between w-full gap-x-2 items-center border border-slate-100 opacity-80 p-2 mb-2 rounded-md bg-slate-50 hover:bg-blue-50 hover:opacity-100">
+                  <div className="flex justify-start items-center gap-x-2">
+                    <div>
+                      <Pencil size={20} />
+                    </div>
+                    <div>Post</div>
+                  </div>
+                  <div>
+                    <ChevronDown size={18} className="opacity-50" />
+                  </div>
                 </div>
-                <div>Post</div>
-              </div>
-            </Link>
+              </CollapsibleTrigger>
+              <CollapsibleContent>
+                <div className="ml-5">
+                  <Link href="/post">
+                    <div className="flex w-full justify-start gap-x-2 items-center border border-slate-100 opacity-80 p-2 mb-2 rounded-md bg-slate-50 hover:bg-blue-50 hover:opacity-100">
+                      <div>
+                        <Plus size={20} />
+                      </div>
+                      <div>Create Post</div>
+                    </div>
+                  </Link>
+                  <Link href="/post/view">
+                    <div className="flex  w-full justify-start gap-x-2 items-center border border-slate-100 opacity-80 p-2 mb-2 rounded-md bg-slate-50 hover:bg-blue-50 hover:opacity-100">
+                      <div>
+                        <View size={20} />
+                      </div>
+                      <div>View Post</div>
+                    </div>
+                  </Link>
+                </div>
+              </CollapsibleContent>
+            </Collapsible>
           </li>
           <li>
             <Link href="/tags">
