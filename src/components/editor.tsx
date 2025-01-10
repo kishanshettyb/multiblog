@@ -9,7 +9,6 @@ interface EditorProps {
 /* eslint-enable */
 
 const EditorForm: React.FC<EditorProps> = ({ value, onChange }) => {
-  console.log(onChange)
   const key = process.env.NEXT_PUBLIC_TINYMCE as string
   // Ensure onChange is called with the correct content type
   const handleEditorChange = (content: string) => {
