@@ -46,7 +46,7 @@ function DomainsCategories() {
             onValueChange={setSelectedDomains}
             defaultValue={selectedDomains}
             placeholder="Select Domains"
-            variant="inverted"
+            variant="secondary"
             maxCount={6}
           />
         ) : (
@@ -62,7 +62,7 @@ function DomainsCategories() {
             onValueChange={setSelectedCategories}
             defaultValue={selectedCategories}
             placeholder="Select Categories"
-            variant="inverted"
+            variant="secondary"
             maxCount={6}
           />
         ) : (
@@ -77,7 +77,7 @@ function DomainsCategories() {
             onValueChange={setSelectedTags}
             defaultValue={selectedTags}
             placeholder="Select Tags"
-            variant="inverted"
+            variant="secondary"
             maxCount={6}
           />
         ) : (
