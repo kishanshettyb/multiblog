@@ -12,12 +12,19 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-import { LoaderCircle } from 'lucide-react'
+import { FilePenLine, Globe, LoaderCircle, Save } from 'lucide-react'
 import EditorForm from '@/components/editor'
 import { useCreatePost, useUpdatePost } from '@/services/mutations/post'
 import DomainsCategories from '../domainsCategories'
 import usePostStore from '@/store/postStore'
 import { PostProps } from '@/types/commonTypes'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from '@/components/ui/select'
 
 const generateSlug = (title: string) => title.trim().toLowerCase().replace(/\s+/g, '-')
 const PostForm = () => {
@@ -118,26 +125,45 @@ const PostForm = () => {
 
   return (
     <div className="w-full">
-      <div className="flex justify-between mb-5">
+      <div className="flex justify-between my-5">
         <h2 className="font-semibold text-[1.5rem]">Post</h2>
         <div className="flex gap-x-2">
-          <div className="border bg-slate-100 rounded-lg px-4 py-2 text-sm">
-            Status:{' '}
-            <p
-              className={`inline ${postStatus === 'published' ? 'text-green-600' : 'text-red-600'}`}
-            >
-              {postStatus || 'Draft'}
-            </p>
+          <div className="flex justify-start gap-x-2 items-center ">
+            <div>
+              <p className="font-semibold opacity-50">Status: </p>
+            </div>
+            <div>
+              <Select value={postStatus} onValueChange={setPostStatus}>
+                <SelectTrigger className="w-[110px]">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="published">Published</SelectItem>
+                  <SelectItem value="draft">Draft</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
-          <Button variant="outline" disabled={isLoading} onClick={form.handleSubmit(onSubmit)}>
+          <Button
+            className="shadow-lg shadow-green-100"
+            variant="outline"
+            disabled={isLoading}
+            onClick={form.handleSubmit(onSubmit)}
+          >
             {isLoading ? (
               <>
                 <LoaderCircle size={18} color="white" className="animate-spin" /> Loading...
               </>
             ) : postId ? (
-              'Update Post'
+              <>
+                <FilePenLine className="-mt-[2px]" />
+                Update Post
+              </>
             ) : (
-              'Save Post'
+              <>
+                <Save className="-mt-[2px]" />
+                Save Post
+              </>
             )}
           </Button>
           <Button variant="default" onClick={handlePublish} disabled={isPublishLoading}>
@@ -145,10 +171,11 @@ const PostForm = () => {
               <>
                 <LoaderCircle size={18} color="white" className="animate-spin" /> Loading...
               </>
-            ) : postId ? (
-              'Published *'
             ) : (
-              'Publish'
+              <>
+                <Globe />
+                Publish
+              </>
             )}
           </Button>
         </div>
