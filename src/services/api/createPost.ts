@@ -12,7 +12,7 @@ const axiosInstance = axios.create({
 
 export const getAllPosts = async (): Promise<Posts[]> => {
   try {
-    const response = await axiosInstance.get<Posts[]>(`/posts`)
+    const response = await axiosInstance.get<Posts[]>(`/posts?populate=*`)
     return response.data
   } catch (error) {
     console.log('Error fetching posts:', error)
@@ -21,5 +21,13 @@ export const getAllPosts = async (): Promise<Posts[]> => {
 }
 
 export const createPost = async (data: Posts) => {
-  await axiosInstance.post('posts', data)
+  return await axiosInstance.post('posts', data)
+}
+
+export const updatePost = async (postId: string, data: Posts) => {
+  const payload = {
+    data: data
+  }
+
+  return await axiosInstance.put(`posts/${postId}`, payload)
 }
