@@ -47,3 +47,15 @@ export type Posts = {
   tags?: never[]
   createdAt: Date
 }
+
+export type PostProps = {
+  data: {
+    post_title: string
+    post_status: string
+    post_slug: string
+    post_content: string
+    domains: string[] | undefined // Updated type
+    category: string[] | undefined // Updated type
+    tags: string[] | undefined // Updated type
+  }
+}
