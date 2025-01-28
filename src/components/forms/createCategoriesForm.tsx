@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+'use client'
+import React, { useEffect, useState, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 import { Button } from '@/components/ui/button'
 import {
@@ -13,23 +14,12 @@ import { Input } from '@/components/ui/input'
 import { MultiSelect } from '../multi-select'
 import { LoaderCircle } from 'lucide-react'
 import { z } from 'zod'
-import { useCreateCategories } from '@/services/mutations/categories'
+import { useCreateCategories, useUpdateCategory } from '@/services/mutations/categories'
 import useModalStore from '../../store/store'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useDomains } from '@/hooks/useDomains'
 import { useTags } from '@/hooks/useTags'
-
-interface CategoriesData {
-  data?: {
-    document_id?: string
-    category_name?: string
-    category_desc?: string
-    category_slug?: string
-    // createdAt?: Date
-    domains?: never[]
-    tags?: never[]
-  }
-}
+import { useSingleCategory } from '@/hooks/useCategories'
 
 const formSchema = z.object({
   category_name: z.string().min(3, { message: 'Category name must be at least 3 characters long' }),
@@ -37,31 +27,40 @@ const formSchema = z.object({
   category_slug: z.string().min(3, { message: 'Slug must be at least 3 characters long' })
 })
 
-function CreateCategoriesForm() {
-  const [selectedDomains, setSelectedDomains] = useState([]) // Ensure state can hold full domain objects
-  const [selectedTags, setSelectedTags] = useState([]) // Ensure state can hold full domain objects
-  const { setIsModalOpen } = useModalStore()
+const CreateCategoriesForm: React.FC<{ categoryId?: string | null }> = ({ categoryId }) => {
   const [isLoading, setIsLoading] = useState(false)
-  const { data } = useDomains()
-  const dataTags = useTags()
+
+  const { setIsModalOpen, setIsEditModalOpen } = useModalStore()
+  const [selectedDomains, setSelectedDomains] = useState([])
+  const [selectedTags, setSelectedTags] = useState([])
+
+  const { data: domainData } = useDomains()
+  const { data: tagData } = useTags()
+  const { data: categoryData } = useSingleCategory(categoryId)
+
   const createCategoriesMutation = useCreateCategories()
+  const updateCategoriesMutation = useUpdateCategory(categoryId)
 
-  const domains = data
-  domains.forEach((item) => {
-    item.value = item.documentId
-    item.label = item.domain_name
-  })
+  const domains = useMemo(() => {
+    return (
+      domainData?.map((item) => ({
+        value: item.documentId,
+        label: item.domain_name
+      })) || []
+    )
+  }, [domainData])
 
-  const tags = dataTags?.data
-  console.log(JSON.stringify(tags))
-  tags.forEach((item) => {
-    item.value = item.documentId
-    item.label = item.tag_name
-  })
+  const tags = useMemo(() => {
+    return (
+      tagData?.map((item) => ({
+        value: item.documentId,
+        label: item.tag_name
+      })) || []
+    )
+  }, [tagData])
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-
     defaultValues: {
       category_name: '',
       category_desc: '',
@@ -69,9 +68,19 @@ function CreateCategoriesForm() {
     }
   })
 
+  useEffect(() => {
+    if (categoryId && categoryData) {
+      form.reset({
+        category_name: categoryData.category_name || '',
+        category_desc: categoryData.category_desc || '',
+        category_slug: categoryData.category_slug || ''
+      })
+    }
+  }, [categoryId, categoryData, form])
+
   function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true)
-
+    console.log(categoryId)
     const categoriesData: CategoriesData = {
       data: {
         category_name: values.category_name,
@@ -81,15 +90,30 @@ function CreateCategoriesForm() {
         tags: selectedTags // Create a comma-separated string of document_ids
       }
     }
-    createCategoriesMutation.mutate(categoriesData, {
-      onError: () => {
-        setIsLoading(false)
-      },
-      onSuccess: () => {
-        setIsLoading(false)
-        setIsModalOpen(false)
-      }
-    })
+    if (categoryId !== undefined && categoryId !== null) {
+      updateCategoriesMutation.mutate(
+        { categoryId, data: categoriesData.data },
+        {
+          onError: () => {
+            setIsLoading(false)
+          },
+          onSuccess: () => {
+            setIsLoading(false)
+            setIsEditModalOpen(false)
+          }
+        }
+      )
+    } else {
+      createCategoriesMutation.mutate(categoriesData, {
+        onError: () => {
+          setIsLoading(false)
+        },
+        onSuccess: () => {
+          setIsLoading(false)
+          setIsModalOpen(false)
+        }
+      })
+    }
   }
 
   return (
@@ -191,6 +215,8 @@ function CreateCategoriesForm() {
                 <>
                   <LoaderCircle size={18} color="white" className="animate-spin" /> loading...
                 </>
+              ) : categoryId ? (
+                'Update Category'
               ) : (
                 'Create Category'
               )}
