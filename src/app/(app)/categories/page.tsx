@@ -17,7 +17,14 @@ function CategoriesPage() {
 
   return (
     <div>
-      <Header title="Categories" desc="" icon={Layers2} buttons modalButton />
+      <Header
+        title="Categories"
+        desc=""
+        icon={Layers2}
+        buttons
+        modalButton
+        buttonTitle="Create Categories"
+      />
       <CustomDataTable columns={columns} data={data} searchItem="category_name" />
       <CustomModal
         modalSize="md:max-w-[400px]"
