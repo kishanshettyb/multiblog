@@ -20,6 +20,24 @@ export const getAllCategories = async (): Promise<Categories> => {
   }
 }
 
+export const getSingleCategory = async (categoryId: string): Promise<Categories> => {
+  try {
+    const response = await axiosInstance.get<Categories>(`/categories/${categoryId}?populate=*`)
+    return response.data
+  } catch (error) {
+    console.log('Error fetching domains:', error)
+    throw error
+  }
+}
+
 export const createCategories = async (data: Categories) => {
-  await axiosInstance.post('categories', data)
+  return await axiosInstance.post('categories', data)
+}
+
+export const updateCategories = async (documentId: string, data: Categories) => {
+  console.log(documentId, JSON.stringify(data))
+  const payload = {
+    data: data
+  }
+  return await axiosInstance.put(`categories/${documentId}`, payload)
 }

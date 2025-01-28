@@ -2,7 +2,6 @@
 import React from 'react'
 import { Button } from './ui/button'
 import Link from 'next/link'
-import { CustomModal } from './customModal'
 import useModalStore from '../store/store'
 
 interface Props {
@@ -29,12 +28,9 @@ function Header({
   buttonTitle,
   buttonLink,
   icon: Icon,
-  modalButton,
-  modalSize,
-  modalTitle,
-  components
+  modalButton
 }: Props) {
-  const { isModalOpen, setIsModalOpen } = useModalStore()
+  const { setIsModalOpen } = useModalStore()
   const handleButtonClick = () => {
     if (modalButton) {
       setIsModalOpen(true)
@@ -57,14 +53,6 @@ function Header({
                 {Icon && <Icon className="mt-[-1px]" />}
                 {buttonTitle ? buttonTitle : 'Button'}
               </Button>
-              <CustomModal
-                modalSize={modalSize}
-                title={modalTitle ? modalTitle : ''}
-                isOpen={isModalOpen}
-                onClose={() => setIsModalOpen(false)}
-              >
-                <div>{components}</div>
-              </CustomModal>
             </div>
           ) : (
             <Link href={buttonLink ? buttonLink : '#'}>

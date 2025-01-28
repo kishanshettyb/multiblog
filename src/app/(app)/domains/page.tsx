@@ -6,10 +6,14 @@ import { CustomDataTable } from '@/components/customDatatable'
 import CreateDomainsForm from '@/components/forms/createDomainsForm'
 import { useDomains } from '@/hooks/useDomains'
 import { getDomainsColumns } from '@/config/domainsColumns'
+import { CustomModal } from '@/components/customModal'
+import useModalStore from '@/store/store'
 
 function Domains() {
   const { data } = useDomains()
   const columns = getDomainsColumns()
+  const { isModalOpen, setIsModalOpen } = useModalStore()
+
   return (
     <div className="h-full overflow-auto ">
       <Header
@@ -18,11 +22,19 @@ function Domains() {
         buttons
         buttonTitle="Create Domains"
         icon={Plus}
-        modalSize="md:max-w-[400px]"
         modalButton
-        modalTitle="Create Domain"
-        components={<CreateDomainsForm />}
       />
+      <CustomModal
+        modalSize="md:max-w-[400px]"
+        title="Create Domains"
+        desc="Domains"
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      >
+        <div>
+          <CreateDomainsForm />
+        </div>
+      </CustomModal>
       <CustomDataTable columns={columns} data={data} searchItem="domain_name" />
     </div>
   )
