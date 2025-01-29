@@ -1,6 +1,6 @@
 import { Domain } from '@/types/commonTypes'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { createDomains } from '../api/domains'
+import { createDomains, updateDomains } from '../api/domains'
 import { useToast } from '@/hooks/use-toast'
 import axios from 'axios'
 
@@ -42,6 +42,58 @@ export function useCreateDomain() {
           toast({
             variant: 'destructive',
             title: 'Unable to create domain',
+            description: 'An unknown error occurred.'
+          })
+        }
+      } else {
+        await queryClient.invalidateQueries({
+          queryKey: ['domains']
+        })
+      }
+    }
+  })
+}
+
+export function useUpdateDomain() {
+  const queryClient = useQueryClient()
+  const { toast } = useToast()
+
+  return useMutation({
+    mutationFn: ({ domainId, data }: { domainId: string; data: Domain }) =>
+      updateDomains(domainId, data),
+
+    onMutate: () => {
+      console.log('mutate')
+    },
+    onError: () => {
+      console.log('error')
+    },
+    onSuccess: () => {
+      console.log('success')
+      toast({
+        variant: 'default',
+        title: 'Category updated successfully'
+      })
+      queryClient.invalidateQueries({
+        queryKey: ['domains']
+      })
+    },
+    onSettled: async (_, error) => {
+      console.log('settled')
+      if (error) {
+        if (axios.isAxiosError(error)) {
+          const message =
+            error.response?.data?.error.message || 'An error occurred during creation.'
+          toast({
+            variant: 'destructive',
+            title: 'Unable to update domain',
+            description:
+              message == 'This attribute must be unique' ? 'domain name already exist' : message
+          })
+        } else {
+          toast({
+            variant: 'destructive',
+            title: 'Unable to update domain',
             description: 'An unknown error occurred.'
           })
         }

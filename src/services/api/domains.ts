@@ -20,6 +20,23 @@ export const getAllDomains = async (): Promise<Domain[]> => {
   }
 }
 
+export const getSingleDomain = async (domainId: string): Promise<Domain> => {
+  try {
+    const response = await axiosInstance.get<Domain>(`/domains/${domainId}`)
+    return response.data
+  } catch (error) {
+    console.log('Error fetching domains:', error)
+    throw error
+  }
+}
 export const createDomains = async (data: Domain) => {
   await axiosInstance.post('domains', data)
+}
+
+export const updateDomains = async (documentId: string, data: Domain) => {
+  console.log(documentId, JSON.stringify(data))
+  const payload = {
+    data: data
+  }
+  return await axiosInstance.put(`domains/${documentId}`, payload)
 }
