@@ -4,11 +4,13 @@ export type Login = {
 }
 
 export type Domain = {
-  documentId: string
-  domain_name: string
-  domain_desc: string
-  publishedAt: Date
-  createdAt: Date
+  documentId?: string
+  domain_name?: string
+  domain_desc?: string
+  publishedAt?: Date
+  meta_description?: string
+  meta_keywords?: string
+  createdAt?: Date
   value?: string | undefined
   label?: string | undefined
   data?: unknown[] | undefined

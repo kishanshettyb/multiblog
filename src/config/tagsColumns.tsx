@@ -1,18 +1,16 @@
 import { Tags } from '@/types/commonTypes'
 import { ColumnDef } from '@tanstack/react-table'
-import { ArrowUpDown, MoreHorizontal, Pen } from 'lucide-react'
+import { ArrowUpDown, Edit } from 'lucide-react'
 import React from 'react'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import ShowDate from '@/components/showDate'
+import useModalStore from '@/store/store'
+
+interface RowData {
+  documentId: string
+  // Add other fields in your data structure if needed
+}
 
 export const getTagsColumns = (): ColumnDef<Tags>[] => [
   {
@@ -81,27 +79,16 @@ export const getTagsColumns = (): ColumnDef<Tags>[] => [
   {
     id: 'actions',
     enableHiding: false,
-    cell: ({ row }) => {
-      const payment = row.original
+    accessorKey: 'documentId',
+    cell: function ActionCell({ row }: { row: { original: RowData } }) {
+      const id = row.original.documentId
+      const openModal = useModalStore((state) => state.openModal)
+
       return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="h-8 w-8 p-4">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => navigator.clipboard.writeText(payment.id)}>
-              <>
-                <Pen size={10} /> Edit
-              </>
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <Button onClick={() => openModal(id)} variant="outline">
+          <Edit />
+          Edit
+        </Button>
       )
     }
   }

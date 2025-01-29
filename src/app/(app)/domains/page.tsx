@@ -13,6 +13,7 @@ function Domains() {
   const { data } = useDomains()
   const columns = getDomainsColumns()
   const { isModalOpen, setIsModalOpen } = useModalStore()
+  const { setIsEditModalOpen, isEditModalOpen, documentId } = useModalStore()
 
   return (
     <div className="h-full overflow-auto ">
@@ -32,7 +33,19 @@ function Domains() {
         onClose={() => setIsModalOpen(false)}
       >
         <div>
-          <CreateDomainsForm />
+          <CreateDomainsForm domainId={documentId ? documentId : null} />
+        </div>
+      </CustomModal>
+
+      <CustomModal
+        modalSize="md:max-w-[400px]"
+        title="Edit Domains"
+        desc="Edit Domains"
+        isOpen={isEditModalOpen}
+        onClose={() => setIsEditModalOpen(false)}
+      >
+        <div>
+          <CreateDomainsForm domainId={documentId ? documentId : null} />
         </div>
       </CustomModal>
       <CustomDataTable columns={columns} data={data} searchItem="domain_name" />

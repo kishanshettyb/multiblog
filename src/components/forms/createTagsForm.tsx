@@ -1,6 +1,6 @@
 'use client'
 import { zodResolver } from '@hookform/resolvers/zod'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { Button } from '@/components/ui/button'
 import {
@@ -16,16 +16,19 @@ import { z } from 'zod'
 import { LoaderCircle } from 'lucide-react'
 import useModalStore from '../../store/store'
 import { useCreateTags } from '@/services/mutations/tags'
+import { useGetSingeTag } from '@/services/queries/tags'
 
 const formSchema = z.object({
   tag_name: z.string().min(3, { message: 'Tag name must be at least 3 characters long' }),
   tag_slug: z.string().min(3, { message: 'Tag slug must be at least 3 characters long' })
 })
 
-function CreateTagsForm() {
+const CreateTagsForm: React.FC<{ tagId?: string | null }> = ({ tagId }) => {
   const [isLoading, setIsLoading] = useState(false)
   const { setIsModalOpen } = useModalStore()
   const createTagsMutation = useCreateTags()
+  const { data: tagData } = useGetSingeTag(tagId)
+  const singleTagsData = tagData?.data
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
 
@@ -34,6 +37,24 @@ function CreateTagsForm() {
       tag_slug: ''
     }
   })
+
+  useEffect(() => {
+    if (tagId && singleTagsData) {
+      const currentValues = form.getValues()
+      const newValues = {
+        tag_name: singleTagsData.tag_name || '',
+        tag_slug: singleTagsData.tag_slug
+      }
+
+      // Only reset if current values are different from new values
+      if (
+        currentValues.tag_name !== newValues.tag_name ||
+        currentValues.tag_slug !== newValues.tag_slug
+      ) {
+        form.reset(newValues)
+      }
+    }
+  }, [tagId, singleTagsData, form])
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true)
