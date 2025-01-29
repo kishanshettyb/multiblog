@@ -1,6 +1,6 @@
 'use client'
 import { zodResolver } from '@hookform/resolvers/zod'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { Button } from '@/components/ui/button'
 import {
@@ -13,10 +13,11 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { z } from 'zod'
-import { useCreateDomain } from '@/services/mutations/domain'
+import { useCreateDomain, useUpdateDomain } from '@/services/mutations/domain'
 import { LoaderCircle } from 'lucide-react'
 import useModalStore from '../../store/store'
 import { Textarea } from '../ui/textarea'
+import { useGetSingeDomain } from '@/services/queries/domains'
 
 const domainNameRegex = /^(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$/
 const formSchema = z.object({
@@ -34,10 +35,13 @@ const formSchema = z.object({
   meta_keywords: z.string().min(3, { message: 'Meta Keywords must be at least 3 characters long' })
 })
 
-function CreateDomainsForm() {
+const CreateDomainsForm: React.FC<{ domainId?: string | null }> = ({ domainId }) => {
   const [isLoading, setIsLoading] = useState(false)
-  const { setIsModalOpen } = useModalStore()
+  const { setIsModalOpen, setIsEditModalOpen } = useModalStore()
   const createDomainsMutation = useCreateDomain()
+  const updateDomainsMutation = useUpdateDomain(domainId)
+  const { data: singleDomainsData } = useGetSingeDomain(domainId)
+  const singleDomainData = singleDomainsData?.data
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
 
@@ -48,6 +52,28 @@ function CreateDomainsForm() {
       meta_keywords: ''
     }
   })
+
+  useEffect(() => {
+    if (domainId && singleDomainData) {
+      const currentValues = form.getValues()
+      const newValues = {
+        domain_name: singleDomainData.domain_name || '',
+        domain_desc: singleDomainData.domain_desc || '',
+        meta_description: singleDomainData.meta_description || '',
+        meta_keywords: singleDomainData.meta_keywords
+      }
+
+      // Only reset if current values are different from new values
+      if (
+        currentValues.domain_name !== newValues.domain_name ||
+        currentValues.domain_desc !== newValues.domain_desc ||
+        currentValues.meta_description !== newValues.meta_description ||
+        currentValues.meta_keywords !== newValues.meta_keywords
+      ) {
+        form.reset(newValues)
+      }
+    }
+  }, [domainId, singleDomainData, form])
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true)
@@ -60,15 +86,40 @@ function CreateDomainsForm() {
       }
     }
 
-    createDomainsMutation.mutate(domainsData, {
-      onError: () => {
-        setIsLoading(false)
-      },
-      onSuccess: () => {
-        setIsLoading(false)
-        setIsModalOpen(false)
-      }
-    })
+    if (domainId !== undefined && domainId !== null) {
+      updateDomainsMutation.mutate(
+        { domainId, data: domainsData.data },
+        {
+          onError: () => {
+            setIsLoading(false)
+          },
+          onSuccess: () => {
+            setIsLoading(false)
+            setIsEditModalOpen(false)
+          }
+        }
+      )
+    } else {
+      createDomainsMutation.mutate(domainsData, {
+        onError: () => {
+          setIsLoading(false)
+        },
+        onSuccess: () => {
+          setIsLoading(false)
+          setIsModalOpen(false)
+        }
+      })
+    }
+
+    // createDomainsMutation.mutate(domainsData, {
+    //   onError: () => {
+    //     setIsLoading(false)
+    //   },
+    //   onSuccess: () => {
+    //     setIsLoading(false)
+    //     setIsModalOpen(false)
+    //   }
+    // })
   }
 
   return (
@@ -146,8 +197,10 @@ function CreateDomainsForm() {
                 <>
                   <LoaderCircle size={18} color="white" className="animate-spin" /> loading...
                 </>
+              ) : domainId ? (
+                'Update Category'
               ) : (
-                'Create Domain'
+                'Create Category'
               )}
             </Button>
           </div>

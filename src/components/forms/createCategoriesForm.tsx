@@ -70,11 +70,21 @@ const CreateCategoriesForm: React.FC<{ categoryId?: string | null }> = ({ catego
 
   useEffect(() => {
     if (categoryId && categoryData) {
-      form.reset({
+      const currentValues = form.getValues()
+      const newValues = {
         category_name: categoryData.category_name || '',
         category_desc: categoryData.category_desc || '',
         category_slug: categoryData.category_slug || ''
-      })
+      }
+
+      // Only reset if current values are different from new values
+      if (
+        currentValues.category_name !== newValues.category_name ||
+        currentValues.category_desc !== newValues.category_desc ||
+        currentValues.category_slug !== newValues.category_slug
+      ) {
+        form.reset(newValues)
+      }
     }
   }, [categoryId, categoryData, form])
 
