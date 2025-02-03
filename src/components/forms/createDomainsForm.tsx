@@ -110,16 +110,6 @@ const CreateDomainsForm: React.FC<{ domainId?: string | null }> = ({ domainId })
         }
       })
     }
-
-    // createDomainsMutation.mutate(domainsData, {
-    //   onError: () => {
-    //     setIsLoading(false)
-    //   },
-    //   onSuccess: () => {
-    //     setIsLoading(false)
-    //     setIsModalOpen(false)
-    //   }
-    // })
   }
 
   return (
@@ -181,9 +171,8 @@ const CreateDomainsForm: React.FC<{ domainId?: string | null }> = ({ domainId })
                     className="resize-none"
                     {...field}
                     onChange={(e) => {
-                      // Replace spaces with commas and update the field value
                       const updatedValue = e.target.value.replace(/\s+/g, ',')
-                      field.onChange(updatedValue) // Manually trigger the field's onChange handler with the modified value
+                      field.onChange(updatedValue)
                     }}
                   />
                 </FormControl>

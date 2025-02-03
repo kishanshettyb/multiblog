@@ -32,12 +32,21 @@ export function useCreateTags() {
         if (axios.isAxiosError(error)) {
           const message =
             error.response?.data?.error.message || 'An error occurred during creation.'
+          const errorMessages = errorResponse.error.details.errors
+            .map((err) => `${err.path.join('.')}: ${err.message}`)
+            .join('\n')
           toast({
             variant: 'destructive',
             title: 'Unable to create tags',
             description:
               message == 'This attribute must be unique' ? 'Tag name already exist' : message
           })
+          toast({
+            variant: 'destructive',
+            title: 'Unable to create tags',
+            description: errorMessages
+          })
+          console.log(errorMessages)
         } else {
           toast({
             variant: 'destructive',

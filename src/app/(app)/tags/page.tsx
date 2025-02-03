@@ -34,7 +34,7 @@ function Tags() {
         onClose={() => setIsModalOpen(false)}
       >
         <div>
-          <CreateTagsForm tagId={documentId ? documentId : null} />
+          <CreateTagsForm />
         </div>
       </CustomModal>
 

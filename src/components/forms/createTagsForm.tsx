@@ -15,7 +15,7 @@ import { Input } from '@/components/ui/input'
 import { z } from 'zod'
 import { LoaderCircle } from 'lucide-react'
 import useModalStore from '../../store/store'
-import { useCreateTags } from '@/services/mutations/tags'
+import { useCreateTags, useUpdateTags } from '@/services/mutations/tags'
 import { useGetSingeTag } from '@/services/queries/tags'
 
 const formSchema = z.object({
@@ -26,6 +26,7 @@ const formSchema = z.object({
 const CreateTagsForm: React.FC<{ tagId?: string | null }> = ({ tagId }) => {
   const [isLoading, setIsLoading] = useState(false)
   const { setIsModalOpen } = useModalStore()
+  const updateTagsMutation = useUpdateTags()
   const createTagsMutation = useCreateTags()
   const { data: tagData } = useGetSingeTag(tagId)
   const singleTagsData = tagData?.data
@@ -45,8 +46,6 @@ const CreateTagsForm: React.FC<{ tagId?: string | null }> = ({ tagId }) => {
         tag_name: singleTagsData.tag_name || '',
         tag_slug: singleTagsData.tag_slug
       }
-
-      // Only reset if current values are different from new values
       if (
         currentValues.tag_name !== newValues.tag_name ||
         currentValues.tag_slug !== newValues.tag_slug
@@ -64,16 +63,30 @@ const CreateTagsForm: React.FC<{ tagId?: string | null }> = ({ tagId }) => {
         tag_slug: values.tag_slug
       }
     }
-
-    createTagsMutation.mutate(tagsData, {
-      onError: () => {
-        setIsLoading(false)
-      },
-      onSuccess: () => {
-        setIsLoading(false)
-        setIsModalOpen(false)
-      }
-    })
+    if (tagId !== undefined && tagId !== null) {
+      updateTagsMutation.mutate(
+        { tagId, data: tagsData.data },
+        {
+          onError: () => {
+            setIsLoading(false)
+          },
+          onSuccess: () => {
+            setIsLoading(false)
+            setIsEditModalOpen(false)
+          }
+        }
+      )
+    } else {
+      createTagsMutation.mutate(tagsData, {
+        onError: () => {
+          setIsLoading(false)
+        },
+        onSuccess: () => {
+          setIsLoading(false)
+          setIsModalOpen(false)
+        }
+      })
+    }
   }
 
   return (
@@ -87,7 +100,7 @@ const CreateTagsForm: React.FC<{ tagId?: string | null }> = ({ tagId }) => {
               <FormItem>
                 <FormLabel>Tag Name</FormLabel>
                 <FormControl>
-                  <Input placeholder="Enter tag name" {...field} />
+                  <Input className="lowercase" placeholder="Enter tag name" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -100,7 +113,15 @@ const CreateTagsForm: React.FC<{ tagId?: string | null }> = ({ tagId }) => {
               <FormItem>
                 <FormLabel>Tag Slug(URL)</FormLabel>
                 <FormControl>
-                  <Input placeholder="Enter tag slug (URL)" {...field} />
+                  <Input
+                    placeholder="Enter tag slug (URL)"
+                    {...field}
+                    onChange={(e) => {
+                      // Replace spaces with commas and update the field value
+                      const updatedValue = e.target.value.replace(/\s+/g, '-')
+                      field.onChange(updatedValue) // Manually trigger the field's onChange handler with the modified value
+                    }}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -112,6 +133,8 @@ const CreateTagsForm: React.FC<{ tagId?: string | null }> = ({ tagId }) => {
                 <>
                   <LoaderCircle size={18} color="white" className="animate-spin" /> loading...
                 </>
+              ) : tagId ? (
+                'Update Tag'
               ) : (
                 'Create Tag'
               )}

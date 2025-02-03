@@ -33,7 +33,7 @@ function Domains() {
         onClose={() => setIsModalOpen(false)}
       >
         <div>
-          <CreateDomainsForm domainId={documentId ? documentId : null} />
+          <CreateDomainsForm />
         </div>
       </CustomModal>
 
