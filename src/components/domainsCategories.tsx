@@ -6,41 +6,46 @@ import { MultiSelect } from './multi-select'
 import usePostStore from '@/store/postStore'
 
 type Option = {
-  value: string | undefined
-  label: string | undefined
+  value: string
+  label: string
 }
 
 function DomainsCategories() {
-  const { selectedDomains, setSelectedDomains } = usePostStore()
-  const { selectedCategories, setSelectedCategories } = usePostStore()
-  const { selectedTags, setSelectedTags } = usePostStore()
+  const {
+    selectedDomains,
+    setSelectedDomains,
+    selectedCategories,
+    setSelectedCategories,
+    selectedTags,
+    setSelectedTags
+  } = usePostStore()
 
   const { data: domainData } = useDomains()
   const domains: Option[] =
     domainData?.map((item) => ({
-      value: item.documentId,
-      label: item.domain_name
+      value: item.documentId ?? '',
+      label: item.domain_name ?? ''
     })) || []
 
   const { data: tagData } = useTags()
   const tagsData: Option[] =
     tagData?.map((item) => ({
-      value: item.documentId,
-      label: item.tag_name
+      value: item.documentId ?? '',
+      label: item.tag_name ?? ''
     })) || []
 
   const { data: categoryData } = useCategories()
   const categoriesData: Option[] =
     categoryData?.map((item) => ({
-      value: item.documentId,
-      label: item.category_name
+      value: item.documentId ?? '',
+      label: item.category_name ?? ''
     })) || []
 
   return (
     <div className="border rounded-xl p-4">
       <div className="mb-5">
         <h2 className="font-semibold text-slate-600 text-lg">Domains</h2>
-        {domains?.length > 0 ? (
+        {domains.length > 0 ? (
           <MultiSelect
             options={domains}
             onValueChange={setSelectedDomains}
@@ -56,7 +61,7 @@ function DomainsCategories() {
 
       <div className="mb-5">
         <h2 className="font-semibold text-slate-600 text-lg">Categories</h2>
-        {categoriesData?.length > 0 ? (
+        {categoriesData.length > 0 ? (
           <MultiSelect
             options={categoriesData}
             onValueChange={setSelectedCategories}
@@ -69,9 +74,10 @@ function DomainsCategories() {
           <p>No categories found</p>
         )}
       </div>
+
       <div className="mb-5">
         <h2 className="font-semibold text-slate-600 text-lg">Tags</h2>
-        {tagsData?.length > 0 ? (
+        {tagsData.length > 0 ? (
           <MultiSelect
             options={tagsData}
             onValueChange={setSelectedTags}
